@@ -28,10 +28,10 @@ void ADeckPlayerController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    if (ADeckPlayerState* WitchPlayerState = GetPlayerState<ADeckPlayerState>())
+    if (ADeckPlayerState* DeckPlayerState = GetPlayerState<ADeckPlayerState>())
     {
-        WitchPlayerState->GrantAbilities();
-        WitchPlayerState->InitializeAttributes();
+        DeckPlayerState->GrantAbilities();
+        DeckPlayerState->InitializeAttributes();
 
         if (HasAuthority() && IsLocalPlayerController())
         {
@@ -103,9 +103,9 @@ void ADeckPlayerController::BeginPlay()
 
 UDeckAbilitySystemComponent* ADeckPlayerController::GetDeckAbilitySystemComponent() const
 {
-    if (ADeckPlayerState* WitchPlayerState = GetPlayerState<ADeckPlayerState>())
+    if (ADeckPlayerState* DeckPlayerState = GetPlayerState<ADeckPlayerState>())
     {
-        return WitchPlayerState->GetDeckAbilitySystemComponent();
+        return DeckPlayerState->GetDeckAbilitySystemComponent();
     }
 
     return nullptr;

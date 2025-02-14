@@ -70,5 +70,5 @@ private:
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
-	void SetupUI(ADeckPlayerState* WitchPlayerState);
+	void SetupUI(ADeckPlayerState* DeckPlayerState);
 };
