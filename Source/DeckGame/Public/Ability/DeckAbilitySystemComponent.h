@@ -16,12 +16,6 @@ class DECKGAME_API UDeckAbilitySystemComponent : public UAbilitySystemComponent
 
 	DECLARE_MULTICAST_DELEGATE(FOnAbilitiesChanged)
 
-	void InsertSortPriority(TArray<FGameplayAbilitySpecHandle>& Array, FGameplayAbilitySpecHandle SpecToInsert) const;
-
-	void ClientActivateAbilityFailed_Implementation(FGameplayAbilitySpecHandle AbilityToActivate, int16 PredictionKey) override;
-	void ClientActivateAbilitySucceedWithEventData_Implementation(FGameplayAbilitySpecHandle Handle, FPredictionKey PredictionKey, FGameplayEventData TriggerEventData) override;
-	void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
-
 public:
 	UDeckAbilitySystemComponent();
 
@@ -47,4 +41,11 @@ protected:
 
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
 	TArray<FGameplayTag> InputHeldTags;
+
+private:
+	void InsertSortPriority(TArray<FGameplayAbilitySpecHandle>& Array, FGameplayAbilitySpecHandle SpecToInsert) const;
+
+	void ClientActivateAbilityFailed_Implementation(FGameplayAbilitySpecHandle AbilityToActivate, int16 PredictionKey) override;
+	void ClientActivateAbilitySucceedWithEventData_Implementation(FGameplayAbilitySpecHandle Handle, FPredictionKey PredictionKey, FGameplayEventData TriggerEventData) override;
+	void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
 };

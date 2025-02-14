@@ -19,8 +19,10 @@ public class DeckGame : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] {
 			"AIModule",
 			"GameplayAbilities",
-			"GameplayTags",
-			"GameplayTasks"
+            "GameplayMessageRuntime",
+            "GameplayTags",
+			"GameplayTasks",
+			"UMG"
 		});
 
 		// Uncomment if you are using Slate UI

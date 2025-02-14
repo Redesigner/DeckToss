@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Stephen Melnick
-#include "Character/DeckAbilitySystemComponent.h"
+#include "Ability/DeckAbilitySystemComponent.h"
 
 #include "Logging/StructuredLog.h"
 
@@ -123,13 +123,13 @@ void UDeckAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 			FGameplayAbilitySpec* AbilitySpec = FindAbilitySpecFromHandle(AbilitySpecHandle);
 			if (!AbilitySpec)
 			{
-				UE_LOGFMT(LogDeckGame, Error, "WitchforestASC: AbilitySpec was invalid.");
+				UE_LOGFMT(LogDeckGame, Error, "DeckAbilitySystemComponent: AbilitySpec was invalid.");
 				continue;
 			}
 
 			if (!AbilitySpec->Ability)
 			{
-				UE_LOGFMT(LogDeckGame, Error, "WitchforestASC: AbilitySpec was valid, but the referenced ability pointer was invalid.");
+				UE_LOGFMT(LogDeckGame, Error, "DeckAbilitySystemComponent: AbilitySpec was valid, but the referenced ability pointer was invalid.");
 				continue;
 			}
 
@@ -144,7 +144,7 @@ void UDeckAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 			{
 				if (DeckAbility && DeckAbility->ConsumesInput())
 				{
-					UE_LOGFMT(LogDeckGame, Verbose, "WitchForestASC: Ability {AbilityName} consumed input.", DeckAbility->GetName());
+					UE_LOGFMT(LogDeckGame, Verbose, "DeckAbilitySystemComponent: Ability {AbilityName} consumed input.", DeckAbility->GetName());
 					break;
 				}
 			}
@@ -249,14 +249,14 @@ void UDeckAbilitySystemComponent::InsertSortPriority(TArray<FGameplayAbilitySpec
 	FGameplayAbilitySpec* AbilitySpec = FindAbilitySpecFromHandle(SpecToInsert);
 	if (!AbilitySpec)
 	{
-		UE_LOGFMT(LogDeckGame, Error, "WitchForestASC failed to sort ability by priority. AbilitySpecHandle was invalid.");
+		UE_LOGFMT(LogDeckGame, Error, "DeckAbilitySystemComponent failed to sort ability by priority. AbilitySpecHandle was invalid.");
 		return;
 	}
 
 	UDeckGameplayAbility* AbilityToInsert = Cast<UDeckGameplayAbility>(AbilitySpec->Ability);
 	if (!AbilityToInsert)
 	{
-		UE_LOGFMT(LogDeckGame, Error, "WitchForestASC failed to sort ability by priority. Ability was not of type 'WitchForestGameplayAbility'.");
+		UE_LOGFMT(LogDeckGame, Error, "DeckAbilitySystemComponent failed to sort ability by priority. Ability was not of type 'DeckGameplayAbility'.");
 		return;
 	}
 	uint8 InsertedAbilityPriority = AbilityToInsert->GetPriority();

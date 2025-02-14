@@ -1,0 +1,21 @@
+// Copyright (c) 2024 Stephen Melnick
+
+#pragma once
+
+#include "NativeGameplayTags.h"
+
+namespace DeckGameplayTags
+{
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look);
+
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Death);
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Respawn);
+
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage);
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Duration);
+
+#if !UE_BUILD_SHIPPING
+	DECKGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cheat_Immortal);
+#endif // !UE_BUILD_SHIPPING
+}
