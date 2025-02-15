@@ -7,10 +7,10 @@
 
 #include "DeckGameMode.generated.h"
 
-class UItemSet;
-class UPotionRecipeSet;
 class UBestiaryData;
 class UGameplayEffectDataSet;
+class UItemSet;
+class UCardAbilityMap;
 
 UCLASS()
 class DECKGAME_API ADeckGameMode : public AGameMode
@@ -22,7 +22,12 @@ public:
 
 	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
+	UCardAbilityMap* GetCards() const;
+
 private:
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TObjectPtr<UCardAbilityMap> Cards;
+
 	void PostLogin(APlayerController* NewPlayer) override;
 
 	void StartPlay() override;

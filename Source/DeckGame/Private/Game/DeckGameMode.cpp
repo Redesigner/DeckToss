@@ -23,3 +23,8 @@ void ADeckGameMode::InitGame(const FString& MapName, const FString& Options, FSt
 {
     Super::InitGame(MapName, Options, ErrorMessage);
 }
+
+UCardAbilityMap* ADeckGameMode::GetCards() const
+{
+    return Cards;
+}

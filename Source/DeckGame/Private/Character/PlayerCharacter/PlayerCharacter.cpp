@@ -67,8 +67,6 @@ void APlayerCharacter::InteractVolumeEndOverlap(UPrimitiveComponent* OverlappedC
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	// UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	// Input->BindAction(WalkAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 	BindActions(PlayerInputComponent);
 }
 
