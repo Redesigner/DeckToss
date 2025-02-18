@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
+#include "GameObjects/CardItem.h"
 #include "CardAbilityMap.generated.h"
 
 class ACardItem;
@@ -20,7 +21,7 @@ public:
 	FGameplayTag CardTag;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UDeckGameplayAbility> CardAbility;
+	TSubclassOf<UDeckGameplayAbility> CardAbility;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ACardItem> CardItem;
@@ -35,7 +36,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (TitleProperty = "CardTag"))
 	TArray<FCardAbilityEntry> Cards;
 
-	bool FindAbilityFromTag(FGameplayTag CardTag, UDeckGameplayAbility*& AbilityOut) const;
+	bool FindAbilityFromTag(FGameplayTag CardTag, TSubclassOf<UDeckGameplayAbility>& AbilityOut) const;
 
 	bool FindItemFromTag(FGameplayTag CardTag, TSubclassOf<ACardItem>& ItemOut) const;
+
+	bool FindEntryFromItem(TSubclassOf<ACardItem> Item, FCardAbilityEntry& EntryOut) const;
 };

@@ -3,7 +3,7 @@
 
 #include "Game/CardAbilityMap.h"
 
-bool UCardAbilityMap::FindAbilityFromTag(FGameplayTag CardTag, UDeckGameplayAbility*& AbilityOut) const
+bool UCardAbilityMap::FindAbilityFromTag(FGameplayTag CardTag, TSubclassOf<UDeckGameplayAbility>& AbilityOut) const
 {
 	for (const FCardAbilityEntry& Card : Cards)
 	{
@@ -23,6 +23,19 @@ bool UCardAbilityMap::FindItemFromTag(FGameplayTag CardTag, TSubclassOf<ACardIte
 		if (Card.CardTag == CardTag)
 		{
 			ItemOut = Card.CardItem;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UCardAbilityMap::FindEntryFromItem(TSubclassOf<ACardItem> Item, FCardAbilityEntry& EntryOut) const
+{
+	for (const FCardAbilityEntry& Card : Cards)
+	{
+		if (Card.CardItem == Item)
+		{
+			EntryOut = Card;
 			return true;
 		}
 	}

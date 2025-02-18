@@ -28,7 +28,7 @@ void UDeckAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 	TArray<FGameplayAbilitySpecHandle> TagHandles;
 	for (FGameplayAbilitySpec AbilitySpec : ActivatableAbilities.Items)
 	{
-		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->AbilityTags))
+		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->GetAssetTags()))
 		{
 			InsertSortPriority(TagHandles, AbilitySpec.Handle);
 		}
@@ -51,7 +51,7 @@ void UDeckAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 
 	for (FGameplayAbilitySpec AbilitySpec : ActivatableAbilities.Items)
 	{
-		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->AbilityTags))
+		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->GetAssetTags()))
 		{
 			if (AbilitySpec.IsActive())
 			{
@@ -188,7 +188,7 @@ bool UDeckAbilitySystemComponent::TryActivateAbilitiesByTag(FGameplayTag& Tag, b
 
 	for (FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
 	{
-		if (Tag.MatchesAnyExact(AbilitySpec.Ability->AbilityTags))
+		if (Tag.MatchesAnyExact(AbilitySpec.Ability->GetAssetTags()))
 		{
 			AbilitiesToActivate.AddUnique(AbilitySpec.Handle);
 		}
@@ -208,7 +208,7 @@ bool UDeckAbilitySystemComponent::GetFirstAbilityForInputTag(const FGameplayTag&
 	TArray<FGameplayAbilitySpecHandle> Specs;
 	for (FGameplayAbilitySpec AbilitySpec : ActivatableAbilities.Items)
 	{
-		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->AbilityTags))
+		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->GetAssetTags()))
 		{
 			InsertSortPriority(Specs, AbilitySpec.Handle);
 		}

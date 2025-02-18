@@ -134,7 +134,7 @@ void UBaseAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribu
 
 void UBaseAttributeSet::BroadcastDamageEventPerception(const FGameplayEffectModCallbackData& Data)
 {
-	FVector DamageLocation;
+	FVector DamageLocation = FVector::ZeroVector;
 	if (Data.EffectSpec.GetContext().HasOrigin())
 	{
 		DamageLocation = Data.EffectSpec.GetContext().GetOrigin();
