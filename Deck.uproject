@@ -272,10 +272,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "GLTFExporter",
-			"Enabled": false
-		},
-		{
 			"Name": "InterchangeTests",
 			"Enabled": false
 		},
@@ -416,6 +412,10 @@
 		{
 			"Name": "N10XSourceCodeAccess",
 			"Enabled": false
+		},
+		{
+			"Name": "DatasmithImporter",
+			"Enabled": true
 		}
 	]
 }
