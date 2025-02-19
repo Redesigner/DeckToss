@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Stephen Melnick
+// Copyright (c) 2025 Stephen Melnick
 
 #include "Character/PlayerCharacter/PlayerCharacter.h"
 
@@ -12,14 +12,14 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "DeckGame.h"
+#include "Ability/DeckAbilitySystemComponent.h"
 #include "Ability/DeckGameplayTags.h"
 #include "Character/Components/CardDeckComponent.h"
-#include "Character/Components/DeckMovementComponent.h"
 #include "Character/Components/DeckInputComponent.h"
+#include "Character/Components/DeckMovementComponent.h"
+#include "Character/Components/MeleeComponent.h"
 #include "Character/DeckPlayerState.h"
-
 #include "Input/DeckInputConfig.h"
-#include "Ability/DeckAbilitySystemComponent.h"
 
 
 APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) :
@@ -48,6 +48,8 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) 
 	InteractionVolume->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeEndOverlap);
 
 	CardDeck = CreateDefaultSubobject<UCardDeckComponent>(TEXT("CardDeck"));
+
+	Melee = CreateDefaultSubobject<UMeleeComponent>(TEXT("Melee"));
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)

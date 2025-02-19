@@ -11,6 +11,7 @@
 
 #include "DeckGame.h"
 #include "Ability/DeckGameplayAbility.h"
+#include "Ability/DeckGameplayTags.h"
 #include "Game/CardAbilityMap.h"
 #include "Game/DeckGameMode.h"
 #include "GameObjects/CardItem.h"
@@ -58,6 +59,7 @@ void UCardDeckComponent::GiveCard(ACardItem* CardItem)
 	}
 
 	FGameplayAbilitySpec NewSpec = FGameplayAbilitySpec(CardEntry.CardAbility->GetDefaultObject<UDeckGameplayAbility>(), 1);
+	NewSpec.GetDynamicSpecSourceTags().AddTag(DeckGameplayTags::InputTag_Attack);
 	FGameplayAbilitySpecHandle NewAbilityHandle = ASC->GiveAbility(NewSpec);
 	Cards.Add(FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle));
 }

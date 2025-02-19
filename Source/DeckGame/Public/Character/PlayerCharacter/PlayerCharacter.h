@@ -17,6 +17,7 @@ class UDeckAbilitySystemComponent;
 class UDeckInputConfig;
 class UInputAction;
 class UInventoryComponent;
+class UMeleeComponent;
 class USphereComponent;
 class USpringArmComponent;
 struct FInputActionInstance;
@@ -47,6 +48,9 @@ class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemIn
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
 	TObjectPtr<UCardDeckComponent> CardDeck;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
+	TObjectPtr<UMeleeComponent> Melee;
 
 	FVector LastSafeLocation;
 
