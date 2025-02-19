@@ -29,7 +29,15 @@ public:
 
 	bool IsFake() const;
 
+	void SetLastHeldAbilitySystemComponent(UAbilitySystemComponent* ASC);
+
+	void AttachFakeTo(ACardItem* Other);
+
 	ACardItem* GetFakeOwner() const;
+
+	void SetVelocity(FVector Velocity);
+
+	void SetThrown(bool bNewValue);
 
 	bool bHeld = false;
 

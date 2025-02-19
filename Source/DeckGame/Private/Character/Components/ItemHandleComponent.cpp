@@ -100,7 +100,7 @@ ACardItem* UItemHandleComponent::ConsumeItem()
 	Item->bHeld = false;
 	HeldItem = nullptr;
 
-	Item->Destroy();
+	Item->EnableMovement();
 	OnHeldItemChanged.Broadcast();
 	return Item;
 }

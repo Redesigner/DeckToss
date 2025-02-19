@@ -5,6 +5,7 @@
 
 #include "Character/Components/CardDeckComponent.h"
 #include "Character/Components/ItemHandleComponent.h"
+#include "GameObjects/CardItem.h"
 
 void UStashItemAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -37,4 +38,5 @@ void UStashItemAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	}
 
 	CardDeck->GiveCard(HeldItem);
+	HeldItem->Destroy();
 }

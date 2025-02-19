@@ -51,9 +51,31 @@ bool ACardItem::IsFake() const
     return bIsFake;
 }
 
+void ACardItem::SetLastHeldAbilitySystemComponent(UAbilitySystemComponent* ASC)
+{
+    LastHolder = ASC;
+}
+
+void ACardItem::AttachFakeTo(ACardItem* Other)
+{
+    bIsShadowingReal = true;
+    SetActorTickEnabled(true);
+    FakeOwner = Other;
+}
+
 ACardItem* ACardItem::GetFakeOwner() const
 {
     return FakeOwner.Get();
+}
+
+void ACardItem::SetVelocity(FVector Velocity)
+{
+    CollisionSphere->SetPhysicsLinearVelocity(Velocity);
+}
+
+void ACardItem::SetThrown(bool bNewValue)
+{
+    bThrown = bNewValue;
 }
 
 void ACardItem::Tick(float DeltaSeconds)
