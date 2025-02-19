@@ -44,7 +44,7 @@ void UCardDeckComponent::GiveCard(ACardItem* CardItem)
 	}
 
 	UCardAbilityMap* CardMap = CurrentGameMode->GetCards();
-	if (CardMap)
+	if (!CardMap)
 	{
 		UE_LOGFMT(LogDeckGame, Warning, "CardDeck Component: could not grant card ability. The game mode did not have a card ability map.");
 		return;

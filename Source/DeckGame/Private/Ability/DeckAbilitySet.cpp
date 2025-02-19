@@ -94,6 +94,7 @@ void UDeckAbilitySet::GiveToAbilitySystem(UDeckAbilitySystemComponent* DeckAbili
 
 		FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilityToGrant.AbilityLevel);
 		AbilitySpec.SourceObject = SourceObject;
+		AbilitySpec.DynamicAbilityTags.AddTag(AbilityToGrant.InputTag);
 		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityToGrant.InputTag);
 
 		const FGameplayAbilitySpecHandle AbilitySpecHandle = DeckAbilitySystemComponent->GiveAbility(AbilitySpec);

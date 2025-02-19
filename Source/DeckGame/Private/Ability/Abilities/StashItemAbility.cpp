@@ -29,7 +29,7 @@ void UStashItemAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		return;
 	}
 
-	ACardItem* HeldItem = ItemHandle->GetHeldItem();
+	ACardItem* HeldItem = ItemHandle->ConsumeItem();
 	if (!HeldItem)
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);

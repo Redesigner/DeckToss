@@ -30,6 +30,6 @@ public:
 	void GiveCard(ACardItem* CardItem);
 
 private:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))
 	TArray<FCardDeckEntry> Cards;
 };

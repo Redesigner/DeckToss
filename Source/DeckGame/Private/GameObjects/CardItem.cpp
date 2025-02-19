@@ -40,6 +40,22 @@ void ACardItem::DisableMovement()
     CollisionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ACardItem::DisableReplication()
+{
+    bIsFake = true;
+    bReplicates = false;
+}
+
+bool ACardItem::IsFake() const
+{
+    return bIsFake;
+}
+
+ACardItem* ACardItem::GetFakeOwner() const
+{
+    return FakeOwner.Get();
+}
+
 void ACardItem::Tick(float DeltaSeconds)
 {
     if (!bIsShadowingReal)

@@ -11,13 +11,14 @@
 
 #include "PlayerCharacter.generated.h"
 
-class USpringArmComponent;
 class UCameraComponent;
-class UInputAction;
-class UDeckInputConfig;
+class UCardDeckComponent;
 class UDeckAbilitySystemComponent;
+class UDeckInputConfig;
+class UInputAction;
 class UInventoryComponent;
 class USphereComponent;
+class USpringArmComponent;
 struct FInputActionInstance;
 
 UCLASS()
@@ -25,24 +26,27 @@ class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemIn
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess))
 	bool bTopDownCamera = true;
 
 	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess))
 	TObjectPtr<UCameraComponent> FollowCamera;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> WalkAction;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess))
 	TObjectPtr<UDeckInputConfig> InputConfig;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
 	TObjectPtr<USphereComponent> InteractionVolume;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
+	TObjectPtr<UCardDeckComponent> CardDeck;
 
 	FVector LastSafeLocation;
 

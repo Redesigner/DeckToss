@@ -25,6 +25,12 @@ public:
 
 	void DisableMovement();
 
+	void DisableReplication();
+
+	bool IsFake() const;
+
+	ACardItem* GetFakeOwner() const;
+
 	bool bHeld = false;
 
 private:

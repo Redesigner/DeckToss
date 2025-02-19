@@ -28,7 +28,7 @@ void UDeckAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 	TArray<FGameplayAbilitySpecHandle> TagHandles;
 	for (FGameplayAbilitySpec AbilitySpec : ActivatableAbilities.Items)
 	{
-		if (InputTag.MatchesAnyExact(AbilitySpec.Ability->GetAssetTags()))
+		if (InputTag.MatchesAnyExact(AbilitySpec.GetDynamicSpecSourceTags()))
 		{
 			InsertSortPriority(TagHandles, AbilitySpec.Handle);
 		}

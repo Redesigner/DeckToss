@@ -13,6 +13,7 @@
 
 #include "DeckGame.h"
 #include "Ability/DeckGameplayTags.h"
+#include "Character/Components/CardDeckComponent.h"
 #include "Character/Components/DeckMovementComponent.h"
 #include "Character/Components/DeckInputComponent.h"
 #include "Character/DeckPlayerState.h"
@@ -45,6 +46,8 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) 
 	InteractionVolume->SetupAttachment(RootComponent);
 	InteractionVolume->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeBeginOverlap);
 	InteractionVolume->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeEndOverlap);
+
+	CardDeck = CreateDefaultSubobject<UCardDeckComponent>(TEXT("CardDeck"));
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
