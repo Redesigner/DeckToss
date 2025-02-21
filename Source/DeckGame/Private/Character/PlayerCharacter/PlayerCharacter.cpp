@@ -193,13 +193,13 @@ void APlayerCharacter::RotateOTSCamera(FVector2D Input)
 
 UCardDeckComponent* APlayerCharacter::GetCardDeckComponent() const
 {
-	APlayerState* PlayerState = GetPlayerState();
-	if (!PlayerState)
+	APlayerState* OwningPlayerState = GetPlayerState();
+	if (!OwningPlayerState)
 	{
 		return nullptr;
 	}
 
-	UCardDeckComponent* CardDeck = PlayerState->GetComponentByClass<UCardDeckComponent>();
+	UCardDeckComponent* CardDeck = OwningPlayerState->GetComponentByClass<UCardDeckComponent>();
 	if (!CardDeck)
 	{
 		return nullptr;

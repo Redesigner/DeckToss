@@ -16,6 +16,7 @@ struct DECKUI_API FCardDeckUIEntry
 {
 	GENERATED_BODY()
 
+	UPROPERTY(BlueprintReadOnly)
 	FText CardName;
 };
 
