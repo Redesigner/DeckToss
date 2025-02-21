@@ -15,7 +15,10 @@ struct DECKGAME_API FCardDeckEntry
 {
 	GENERATED_BODY()
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	FGameplayTag CardTag;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	FGameplayAbilitySpecHandle GrantedAbility;
 };
 
@@ -24,10 +27,16 @@ class DECKGAME_API UCardDeckComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UCardDeckComponent();
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCardsChanged, const TArray<FCardDeckEntry>&)
+
 	void GiveCard(ACardItem* CardItem);
+
+	const TArray<FCardDeckEntry> GetCards() const;
+
+	FOnCardsChanged OnCardsChanged;
 
 private:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))

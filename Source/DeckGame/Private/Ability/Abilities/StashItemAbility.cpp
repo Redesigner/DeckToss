@@ -3,7 +3,11 @@
 
 #include "Ability/Abilities/StashItemAbility.h"
 
+#include "Logging/StructuredLog.h"
+
+#include "DeckGame.h"
 #include "Character/Components/CardDeckComponent.h"
+#include "Character/Components/CardDeckInterface.h"
 #include "Character/Components/ItemHandleComponent.h"
 #include "GameObjects/CardItem.h"
 
@@ -16,7 +20,15 @@ void UStashItemAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		return;
 	}
 
-	UCardDeckComponent* CardDeck = Owner->GetComponentByClass<UCardDeckComponent>();
+	ICardDeckInterface* CardDeckInterface = Cast<ICardDeckInterface>(Owner);
+	if (!CardDeckInterface)
+	{
+		UE_LOGFMT(LogDeckGame, Warning, "StashItemAbility: Ability failed to activate. Owning actor '{}' must implement ICardDeckInterface.", Owner->GetName());
+		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		return;
+	}
+
+	UCardDeckComponent* CardDeck = CardDeckInterface->GetCardDeckComponent();
 	if (!CardDeck)
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);

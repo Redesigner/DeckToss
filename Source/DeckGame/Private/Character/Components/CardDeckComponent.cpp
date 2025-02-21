@@ -62,4 +62,11 @@ void UCardDeckComponent::GiveCard(ACardItem* CardItem)
 	NewSpec.GetDynamicSpecSourceTags().AddTag(DeckGameplayTags::InputTag_Attack);
 	FGameplayAbilitySpecHandle NewAbilityHandle = ASC->GiveAbility(NewSpec);
 	Cards.Add(FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle));
+
+	OnCardsChanged.Broadcast(Cards);
+}
+
+const TArray<FCardDeckEntry> UCardDeckComponent::GetCards() const
+{
+	return Cards;
 }

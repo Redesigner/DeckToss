@@ -9,6 +9,8 @@
 #include "AbilitySystemInterface.h"
 #include "GameplayCueInterface.h"
 
+#include "Character/Components/CardDeckInterface.h"
+
 #include "PlayerCharacter.generated.h"
 
 class UCameraComponent;
@@ -23,7 +25,7 @@ class USpringArmComponent;
 struct FInputActionInstance;
 
 UCLASS()
-class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemInterface, public IGameplayCueInterface
+class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemInterface, public IGameplayCueInterface, public ICardDeckInterface
 {
 	GENERATED_BODY()
 
@@ -47,16 +49,23 @@ class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemIn
 	TObjectPtr<USphereComponent> InteractionVolume;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
-	TObjectPtr<UCardDeckComponent> CardDeck;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
 	TObjectPtr<UMeleeComponent> Melee;
 
-	FVector LastSafeLocation;
+public:
+	// Consider making Interaction Volume a seprate component so we can use GetComponentByClass instead
+	USphereComponent* GetInteractionVolume() const;
 
+	/// Set the player's color. Must be implemented in blueprint, since mesh refs are difficult
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetPlayerColor(FColor Color);
 
+	void TeleportToLastSafeLocation();
+
+private:
 	DECLARE_MULTICAST_DELEGATE(FOnPotentialInteractionsChanged);
+	FOnPotentialInteractionsChanged OnPotentialInteractionsChanged;
 
+	FVector LastSafeLocation;
 
 	APlayerCharacter(const FObjectInitializer& ObjectInitializer);
 
@@ -89,16 +98,5 @@ class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemIn
 	void RotateTopDownCamera(FVector2D Input);
 	void RotateOTSCamera(FVector2D Input);
 
-
-public:
-	// Consider making Interaction Volume a seprate component so we can use GetComponentByClass instead
-	USphereComponent* GetInteractionVolume() const;
-
-	/// Set the player's color. Must be implemented in blueprint, since mesh refs are difficult
-	UFUNCTION(BlueprintImplementableEvent)
-	void SetPlayerColor(FColor Color);
-
-	void TeleportToLastSafeLocation();
-
-	FOnPotentialInteractionsChanged OnPotentialInteractionsChanged;
+	UCardDeckComponent* GetCardDeckComponent() const override;
 };

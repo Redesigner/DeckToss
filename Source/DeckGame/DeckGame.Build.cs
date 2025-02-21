@@ -12,6 +12,7 @@ public class DeckGame : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			"GameplayAbilities",
 			"InputCore",
 			"EnhancedInput"
 		});

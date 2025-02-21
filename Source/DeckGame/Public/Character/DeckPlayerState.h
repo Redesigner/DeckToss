@@ -7,16 +7,18 @@
 #include "GameplayEffect.h"
 #include "GameFramework/PlayerState.h"
 
+#include "Character/Components/CardDeckInterface.h"
 #include "Game/DeckMessage.h"
 
 #include "DeckPlayerState.generated.h"
 
-class UDeckAbilitySystemComponent;
-class UDeckAbilitySet;
 class UBaseAttributeSet;
+class UCardDeckComponent;
+class UDeckAbilitySet;
+class UDeckAbilitySystemComponent;
 
 UCLASS()
-class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystemInterface
+class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystemInterface, public ICardDeckInterface
 {
 	GENERATED_BODY()
 	
@@ -33,6 +35,9 @@ class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystem
 
 	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Behavior, meta = (AllowPrivateAccess = true))
 	//TEnumAsByte<EDeckTeam> TeamId;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess))
+	TObjectPtr<UCardDeckComponent> CardDeck;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Deck|PlayerState")
@@ -52,6 +57,8 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE(FOnDeath)
 	FOnDeath OnDeath;
+
+	UCardDeckComponent* GetCardDeckComponent() const override;
 
 private:
 	bool bAlive = false;

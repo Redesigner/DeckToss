@@ -19,12 +19,19 @@ ADeckPlayerState::ADeckPlayerState()
 
     AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("AttributeSet"));
     AttributeSet->OnDeath.AddUObject(this, &ThisClass::OnAttributeSetDeath);
+
+    CardDeck = CreateDefaultSubobject<UCardDeckComponent>(TEXT("CardDeck"));
 }
 
 
 UAbilitySystemComponent* ADeckPlayerState::GetAbilitySystemComponent() const
 {
     return AbilitySystem;
+}
+
+UCardDeckComponent* ADeckPlayerState::GetCardDeckComponent() const
+{
+    return CardDeck;
 }
 
 

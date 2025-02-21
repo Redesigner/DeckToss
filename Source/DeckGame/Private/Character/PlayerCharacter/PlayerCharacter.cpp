@@ -47,8 +47,6 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) 
 	InteractionVolume->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeBeginOverlap);
 	InteractionVolume->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeEndOverlap);
 
-	CardDeck = CreateDefaultSubobject<UCardDeckComponent>(TEXT("CardDeck"));
-
 	Melee = CreateDefaultSubobject<UMeleeComponent>(TEXT("Melee"));
 }
 
@@ -191,6 +189,23 @@ void APlayerCharacter::RotateOTSCamera(FVector2D Input)
 
 	AddControllerPitchInput(Input.Y * World->GetDeltaSeconds() * 150.0f);
 	AddControllerYawInput(Input.X * World->GetDeltaSeconds() * 300.0f);
+}
+
+UCardDeckComponent* APlayerCharacter::GetCardDeckComponent() const
+{
+	APlayerState* PlayerState = GetPlayerState();
+	if (!PlayerState)
+	{
+		return nullptr;
+	}
+
+	UCardDeckComponent* CardDeck = PlayerState->GetComponentByClass<UCardDeckComponent>();
+	if (!CardDeck)
+	{
+		return nullptr;
+	}
+
+	return CardDeck;
 }
 
 USphereComponent* APlayerCharacter::GetInteractionVolume() const
