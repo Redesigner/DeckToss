@@ -56,7 +56,8 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 
 	if (GetActorLocation().Z <= -1000.0f)
 	{
-		TeleportToLastSafeLocation();
+		//TeleportToLastSafeLocation();
+		TeleportToStart();
 	}
 }
 
@@ -217,6 +218,11 @@ void APlayerCharacter::TeleportToLastSafeLocation()
 {
 	GetMovementComponent()->Velocity = FVector();
 	TeleportTo(LastSafeLocation, GetActorRotation());
+}
+
+bool APlayerCharacter::CanJump() const
+{
+	return CanJumpInternal();
 }
 
 UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const

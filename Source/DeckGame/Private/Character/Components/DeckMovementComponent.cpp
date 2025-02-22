@@ -40,6 +40,11 @@ void UDeckMovementComponent::PhysWalking(float DeltaTime, int32 Iterations)
 		//}
 	}
 
+	if (Velocity.IsNearlyZero())
+	{
+		bIsSprinting = false;
+	}
+
 	Super::PhysWalking(DeltaTime, Iterations);
 }
 
@@ -90,22 +95,10 @@ float UDeckMovementComponent::GetMaxSpeed() const
 
 float UDeckMovementComponent::GetMaxWalkSpeed() const
 {
-	const float Dot = FMath::Clamp(UpdatedComponent->GetForwardVector().Dot(Velocity.GetSafeNormal2D()), 0.0f, 1.0f);
-	float SpeedModifier = 1.0f;
-
-	// @TODO: Use event based changes instead of checking each tick?
-	if (AbilitySystemComponent.IsValid())
+	if (bIsSprinting)
 	{
-		//if (const UBaseAttributeSet* BaseAttributeSet = Cast<UBaseAttributeSet>(AbilitySystemComponent->GetAttributeSet(UBaseAttributeSet::StaticClass())) )
-		//{
-		//	SpeedModifier = BaseAttributeSet->GetMovementSpeedModifier();
-		//}
+		return MaxWalkSpeed * SprintSpeedModifier;
 	}
 
-	if (bWandering)
-	{
-		return MaxWalkSpeedWandering * SpeedModifier;
-	}
-
-	return FMath::Lerp(MaxWalkSpeedCrouched, MaxWalkSpeed, Dot) * SpeedModifier;
+	return MaxWalkSpeed;
 }

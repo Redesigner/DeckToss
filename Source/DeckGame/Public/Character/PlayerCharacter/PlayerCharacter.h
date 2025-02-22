@@ -24,6 +24,7 @@ class USphereComponent;
 class USpringArmComponent;
 struct FInputActionInstance;
 
+// @TODO: Separate playercharacter logic to be reused for enemies into ADeckCharacter class
 UCLASS()
 class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemInterface, public IGameplayCueInterface, public ICardDeckInterface
 {
@@ -60,6 +61,8 @@ public:
 	void SetPlayerColor(FColor Color);
 
 	void TeleportToLastSafeLocation();
+
+	bool CanJump() const;
 
 private:
 	DECLARE_MULTICAST_DELEGATE(FOnPotentialInteractionsChanged);

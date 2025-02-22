@@ -14,10 +14,22 @@ class DECKGAME_API UDeckMovementComponent : public UCharacterMovementComponent
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Wandering, meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Wandering, meta = (AllowPrivateAccess))
 	float MaxWalkSpeedWandering = 100.0f;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Sprinting, meta = (AllowPrivateAccess, ClampMin = 1.0f))
+	float SprintSpeedModifier = 1.25f;
 
+public:
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Sprinting, meta = (AllowPrivateAccess))
+	bool bIsSprinting = false;
+
+	void SetASC(UDeckAbilitySystemComponent* ASC);
+
+	void SetWandering(bool Wandering);
+
+
+private:
 	TWeakObjectPtr<UDeckAbilitySystemComponent> AbilitySystemComponent;
 
 	bool bWandering = false;
@@ -36,9 +48,5 @@ class DECKGAME_API UDeckMovementComponent : public UCharacterMovementComponent
 
 	float GetMaxWalkSpeed() const;
 
-public:
-	void SetASC(UDeckAbilitySystemComponent* ASC);
-
-	void SetWandering(bool Wandering);
 
 };
