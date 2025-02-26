@@ -104,6 +104,7 @@ void APlayerCharacter::PossessedBy(AController* NewController)
 	ADeckPlayerState* DeckPlayerState = NewController->GetPlayerState<ADeckPlayerState>();
 	if (!DeckPlayerState)
 	{
+		UE_LOGFMT(LogDeckGame, Warning, "Player controller did not have a valid Deck Player State.");
 		return;
 	}
 
