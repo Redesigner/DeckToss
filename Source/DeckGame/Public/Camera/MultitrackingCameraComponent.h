@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Camera/PlayerCameraManager.h"
-#include "Misc/Optional.h"
-
-#include "DeckPlayerCameraManager.generated.h"
+#include "Camera/CameraComponent.h"
+#include "MultitrackingCameraComponent.generated.h"
 
 /**
  * 
  */
-UCLASS()
-class DECKGAME_API ADeckPlayerCameraManager : public APlayerCameraManager
+UCLASS(Meta = (BlueprintSpawnableComponent))
+class DECKGAME_API UMultitrackingCameraComponent : public UCameraComponent
 {
 	GENERATED_BODY()
+
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Tracking, Meta = (AllowPrivateAccess, ClampMin = 0.0f))
 	float CameraMinZoomDistance = 100.0f;
@@ -32,8 +31,9 @@ class DECKGAME_API ADeckPlayerCameraManager : public APlayerCameraManager
 	float CameraTrackingLerpSpeed = 2.0f;
 
 	TOptional<FVector> CalculateCameraPosition() const;
-	
-	void UpdateCamera(float DeltaTime) override;
+
+	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	FVector PreviousCameraPosition;
+	
 };

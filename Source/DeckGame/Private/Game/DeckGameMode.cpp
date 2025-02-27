@@ -18,13 +18,13 @@ void ADeckGameMode::PostLogin(APlayerController* NewPlayer)
 void ADeckGameMode::StartPlay()
 {
     Super::StartPlay();
-
-    UGameplayStatics::CreatePlayer(this, 1);
 }
 
 void ADeckGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
     Super::InitGame(MapName, Options, ErrorMessage);
+
+    UGameplayStatics::CreatePlayer(this);
 }
 
 UCardAbilityMap* ADeckGameMode::GetCards() const

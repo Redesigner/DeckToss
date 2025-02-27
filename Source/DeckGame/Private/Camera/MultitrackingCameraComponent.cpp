@@ -1,15 +1,14 @@
 // Copyright (c) 2025 Paul Alicia, Stephen Melnick, Ian Morales
 
 
-#include "Character/DeckPlayerCameraManager.h"
+#include "Camera/MultitrackingCameraComponent.h"
 
 #include "GameFramework/GameState.h"
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
-TOptional<FVector> ADeckPlayerCameraManager::CalculateCameraPosition() const
+TOptional<FVector> UMultitrackingCameraComponent::CalculateCameraPosition() const
 {
-
 	AGameStateBase* GameState = UGameplayStatics::GetGameState(this);
 	if (!GameState)
 	{
@@ -25,10 +24,10 @@ TOptional<FVector> ADeckPlayerCameraManager::CalculateCameraPosition() const
 	float TopPosition = 0.0f;
 	float BottomPosition = 0.0f;
 
-	FMinimalViewInfo CameraView = GetCameraCachePOV();
-	FVector CameraRight = CameraView.Rotation.RotateVector(FVector::RightVector);
-	FVector CameraUp = CameraView.Rotation.RotateVector(FVector::UpVector);
-	FVector CameraForward = CameraView.Rotation.RotateVector(FVector::ForwardVector);
+	FRotator CameraRotation = GetComponentRotation();
+	FVector CameraRight = CameraRotation.RotateVector(FVector::RightVector);
+	FVector CameraUp = CameraRotation.RotateVector(FVector::UpVector);
+	FVector CameraForward = CameraRotation.RotateVector(FVector::ForwardVector);
 
 	for (APlayerState* PlayerState : GameState->PlayerArray)
 	{
@@ -80,9 +79,9 @@ TOptional<FVector> ADeckPlayerCameraManager::CalculateCameraPosition() const
 		return NullOpt;
 	}
 
-	const float CameraFOVV = CameraView.FOV / CameraView.AspectRatio;
+	const float CameraFOVV = FieldOfView / AspectRatio;
 	const float ZoomDistanceY = ((TopPosition - BottomPosition) / 2.0f) * CameraPaddingYFactor * FMath::Tan(FMath::DegreesToRadians(CameraFOVV) / 2.0f);
-	const float ZoomDistanceX = ((RightPosition - LeftPosition) / 2.0f) * CameraPaddingXFactor * FMath::Tan(FMath::DegreesToRadians(CameraView.FOV) / 2.0f);
+	const float ZoomDistanceX = ((RightPosition - LeftPosition) / 2.0f) * CameraPaddingXFactor * FMath::Tan(FMath::DegreesToRadians(FieldOfView) / 2.0f);
 
 	const float ZoomDistance = FMath::Clamp(FMath::Max(ZoomDistanceX, ZoomDistanceY), CameraMinZoomDistance, CameraMaxZoomDistance);
 
@@ -92,21 +91,12 @@ TOptional<FVector> ADeckPlayerCameraManager::CalculateCameraPosition() const
 		CameraUp * (TopPosition + BottomPosition) / 2.0f);
 }
 
-void ADeckPlayerCameraManager::UpdateCamera(float DeltaTime)
+void UMultitrackingCameraComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::UpdateCamera(DeltaTime);
-
-	// Don't update camera if the relevant player is not using a viewport, since this isn't splitscreen
-	if (!PCOwner->GetLocalPlayer() || !PCOwner->GetLocalPlayer()->ViewportClient)
-	{
-		return;
-	}
-	FMinimalViewInfo CameraView = GetCameraCachePOV();
+	PreviousCameraPosition = GetComponentLocation();
 	TOptional<FVector> NewCameraPosition = CalculateCameraPosition();
 	if (NewCameraPosition)
 	{
-		CameraView.Location = FMath::Lerp(PreviousCameraPosition, NewCameraPosition.GetValue(), FMath::Clamp(CameraTrackingLerpSpeed * DeltaTime, 0.0f, 1.0f));
-		PreviousCameraPosition = CameraView.Location;
-		SetCameraCachePOV(CameraView);
+		SetWorldLocation(FMath::Lerp(PreviousCameraPosition, NewCameraPosition.GetValue(), FMath::Clamp(CameraTrackingLerpSpeed * DeltaTime, 0.0f, 1.0f)));
 	}
 }
