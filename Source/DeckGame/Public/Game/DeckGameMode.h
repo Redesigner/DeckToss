@@ -28,6 +28,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TObjectPtr<UCardAbilityMap> Cards;
 
+	UPROPERTY(EditDefaultsOnly, Meta = (AllowPrivateAccess, ClampMin = 1, ClampMax = 4))
+	int PlayerCount = 2;
+
 	void PostLogin(APlayerController* NewPlayer) override;
 
 	void StartPlay() override;

@@ -16,6 +16,12 @@ void UMultiHudWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// As with the camera, don't create these widgets if there is no viewport
+	if (!GetOwningLocalPlayer() || !GetOwningLocalPlayer()->ViewportClient)
+	{
+		return;
+	}
+
 	if (!HudClass)
 	{
 		UE_LOGFMT(LogDeckUI, Error, "MultiHudWidget: Failed to construct widgets. HudClass was invalid. Did you forget to set it?");

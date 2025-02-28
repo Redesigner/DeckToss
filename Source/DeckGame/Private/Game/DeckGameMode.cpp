@@ -24,7 +24,10 @@ void ADeckGameMode::InitGame(const FString& MapName, const FString& Options, FSt
 {
     Super::InitGame(MapName, Options, ErrorMessage);
 
-    UGameplayStatics::CreatePlayer(this);
+    for (int i = 1; i < PlayerCount; ++i)
+    {
+        UGameplayStatics::CreatePlayer(this);
+    }
 }
 
 UCardAbilityMap* ADeckGameMode::GetCards() const
