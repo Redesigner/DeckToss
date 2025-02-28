@@ -21,7 +21,8 @@ public class DeckUI : ModuleRules
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {
-            "DeckGame"
+            "DeckGame",
+			"GameplayAbilities"
         });
 	}
 }
