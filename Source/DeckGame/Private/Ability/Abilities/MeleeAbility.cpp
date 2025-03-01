@@ -55,8 +55,8 @@ void UMeleeAbility::ForceEndAbility()
 
 void UMeleeAbility::OnEnemyHit(AActor* Enemy)
 {
-	IAbilitySystemInterface* ActorAbility = Cast<IAbilitySystemInterface>(Enemy);
-	if (!ActorAbility)
+	IAbilitySystemInterface* ActorAbilitySystem = Cast<IAbilitySystemInterface>(Enemy);
+	if (!ActorAbilitySystem)
 	{
 		return;
 	}
@@ -67,9 +67,15 @@ void UMeleeAbility::OnEnemyHit(AActor* Enemy)
 		return;
 	}
 
-	UAbilitySystemComponent* EnemyASC = ActorAbility->GetAbilitySystemComponent();
+	UAbilitySystemComponent* EnemyASC = ActorAbilitySystem->GetAbilitySystemComponent();
 	if (!EnemyASC)
 	{
+		return;
+	}
+
+	if (EnemyASC == GetAbilitySystemComponentFromActorInfo())
+	{
+		// Avoid damaging self
 		return;
 	}
 

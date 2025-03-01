@@ -6,6 +6,7 @@
 #include "AttributeSet.h"
 
 #include "AbilitySystemComponent.h"
+#include "GameplayEffect.h"
 
 #include "BaseAttributeSet.generated.h"
 
