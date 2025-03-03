@@ -21,8 +21,10 @@ public class DeckGame : ModuleRules
 			"AIModule",
 			"GameplayAbilities",
             "GameplayMessageRuntime",
+            "GameplayStateTreeModule",
             "GameplayTags",
 			"GameplayTasks",
+			"StateTreeModule",
 			"UMG"
 		});
 

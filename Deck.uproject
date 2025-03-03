@@ -309,10 +309,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "RiderSourceCodeAccess",
-			"Enabled": false
-		},
-		{
 			"Name": "ResonanceAudio",
 			"Enabled": false
 		},
@@ -438,6 +434,14 @@
 		},
 		{
 			"Name": "ModelViewViewModelPreview",
+			"Enabled": true
+		},
+		{
+			"Name": "GameplayStateTree",
+			"Enabled": true
+		},
+		{
+			"Name": "StateTree",
 			"Enabled": true
 		}
 	]

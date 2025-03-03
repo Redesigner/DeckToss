@@ -70,7 +70,11 @@ void UDeckAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec&
 	if (Spec.IsActive())
 	{
 		// This is necessary for the 'Wait Input Released' nodes to function properly
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
+		InvokeReplicatedEvent(
+			EAbilityGenericReplicatedEvent::InputReleased,
+			Spec.Handle,
+			Spec.GetPrimaryInstance() ? Spec.GetPrimaryInstance()->GetCurrentActivationInfo().GetActivationPredictionKey() : FPredictionKey()
+			);
 	}
 }
 
@@ -296,7 +300,12 @@ void UDeckAbilitySystemComponent::ClientActivateAbilityFailed_Implementation(FGa
 	if (UDeckGameplayAbility* FailedAbility = Cast<UDeckGameplayAbility>(FailedAbilitySpec->Ability))
 	{
 		const FGameplayAbilityActorInfo* ActorInfo = AbilityActorInfo.Get();
-		FailedAbility->ActivateAbilityFailed(AbilityToActivate, ActorInfo, FailedAbilitySpec->ActivationInfo, PredictionKey);
+		FailedAbility->ActivateAbilityFailed(
+			AbilityToActivate,
+			ActorInfo,
+			FailedAbilitySpec->GetPrimaryInstance() ? FailedAbilitySpec->GetPrimaryInstance()->GetCurrentActivationInfo() : FGameplayAbilityActivationInfo(),
+			PredictionKey
+		);
 	}
 }
 
@@ -313,7 +322,12 @@ void UDeckAbilitySystemComponent::ClientActivateAbilitySucceedWithEventData_Impl
 	if (UDeckGameplayAbility* FailedAbility = Cast<UDeckGameplayAbility>(AbilitySpec->Ability))
 	{
 		const FGameplayAbilityActorInfo* ActorInfo = AbilityActorInfo.Get();
-		FailedAbility->ActivateAbilitySucceed(Handle, ActorInfo, AbilitySpec->ActivationInfo, PredictionKey);
+		FailedAbility->ActivateAbilitySucceed(
+			Handle,
+			ActorInfo,
+			AbilitySpec->GetPrimaryInstance() ? AbilitySpec->GetPrimaryInstance()->GetCurrentActivationInfo() : FGameplayAbilityActivationInfo(),
+			PredictionKey
+		);
 	}
 }
 

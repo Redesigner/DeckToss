@@ -25,7 +25,7 @@ TOptional<FVector> ADeckPlayerCameraManager::CalculateCameraPosition() const
 	float TopPosition = 0.0f;
 	float BottomPosition = 0.0f;
 
-	FMinimalViewInfo CameraView = GetCameraCachePOV();
+	FMinimalViewInfo CameraView = GetCameraCacheView();
 	FVector CameraRight = CameraView.Rotation.RotateVector(FVector::RightVector);
 	FVector CameraUp = CameraView.Rotation.RotateVector(FVector::UpVector);
 	FVector CameraForward = CameraView.Rotation.RotateVector(FVector::ForwardVector);
@@ -101,7 +101,7 @@ void ADeckPlayerCameraManager::UpdateCamera(float DeltaTime)
 	{
 		return;
 	}
-	FMinimalViewInfo CameraView = GetCameraCachePOV();
+	FMinimalViewInfo CameraView = GetCameraCacheView();
 	TOptional<FVector> NewCameraPosition = CalculateCameraPosition();
 	if (NewCameraPosition)
 	{
