@@ -105,7 +105,15 @@ void ADeckPlayerCameraManager::UpdateCamera(float DeltaTime)
 	TOptional<FVector> NewCameraPosition = CalculateCameraPosition();
 	if (NewCameraPosition)
 	{
-		CameraView.Location = FMath::Lerp(PreviousCameraPosition, NewCameraPosition.GetValue(), FMath::Clamp(CameraTrackingLerpSpeed * DeltaTime, 0.0f, 1.0f));
+		if (!bCameraInitialized)
+		{
+			bCameraInitialized = true;
+			CameraView.Location = NewCameraPosition.GetValue();
+		}
+		else
+		{
+			CameraView.Location = FMath::Lerp(PreviousCameraPosition, NewCameraPosition.GetValue(), FMath::Clamp(CameraTrackingLerpSpeed * DeltaTime, 0.0f, 1.0f));
+		}
 		PreviousCameraPosition = CameraView.Location;
 		SetCameraCachePOV(CameraView);
 	}

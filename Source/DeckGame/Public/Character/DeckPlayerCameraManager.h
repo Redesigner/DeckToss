@@ -36,4 +36,6 @@ class DECKGAME_API ADeckPlayerCameraManager : public APlayerCameraManager
 	void UpdateCamera(float DeltaTime) override;
 
 	FVector PreviousCameraPosition;
+
+	bool bCameraInitialized = false;
 };

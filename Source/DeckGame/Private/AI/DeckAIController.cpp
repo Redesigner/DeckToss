@@ -31,7 +31,7 @@ void ADeckAIController::TargetPerceptionInfoUpdated(const FActorPerceptionUpdate
 		UE_LOGFMT(LogDeckGame, Display, "DeckAIController: Perception sensed '{PerceptionTarget}' with sense '{SenseName}'",
 			UpdateInfo.Target.IsValid() ? UpdateInfo.Target->GetName() : "null",
 			UpdateInfo.Stimulus.Type.Name);
-		StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception);
+		StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception_Sensed, FConstStructView::Make(UpdateInfo.Stimulus));
 	}
 }
 
@@ -51,4 +51,6 @@ void ADeckAIController::TargetPerceptionForgotten(AActor* Actor)
 	}
 
 	AIPerception->GetKnownPerceivedActors(nullptr, PerceivedActors);
+	StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception_Forgotten);
+	UE_LOGFMT(LogDeckGame, Display, "DeckAIController '{}': Perception Forgotten", GetName());
 }

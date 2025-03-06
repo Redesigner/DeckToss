@@ -39,6 +39,8 @@ EStateTreeRunStatus FStateGetClosestPerceivedActorTask::EnterState(FStateTreeExe
 
 	FVector PawnLocation = InstanceData.Actor->GetActorLocation();
 	FVector GoalLocation = FVector::ZeroVector;
+	AActor* GoalActor = nullptr;
+	
 	float ShortestDistanceSquared = 100000000000.0f;
 	for (AActor* PerceivedActor : PerceivedActors)
 	{
@@ -47,12 +49,14 @@ EStateTreeRunStatus FStateGetClosestPerceivedActorTask::EnterState(FStateTreeExe
 		{
 			ShortestDistanceSquared = PerceivedDistance;
 			GoalLocation = PerceivedActor->GetActorLocation();
+			GoalActor = PerceivedActor;
 		}
 	}
 	
 	InstanceData.SensedLocation = GoalLocation;
-	DrawDebugSphere(Context.GetWorld(), GoalLocation, 25.0f, 16, FColor::Red, true, 0.5f);
-	return EStateTreeRunStatus::Succeeded;
+	InstanceData.SensedActor = GoalActor;
+	DrawDebugSphere(Context.GetWorld(), GoalLocation, 25.0f, 16, FColor::Red, false, 0.5f);
+	return EStateTreeRunStatus::Running;
 }
 
 void FStateGetClosestPerceivedActorTask::ExitState(FStateTreeExecutionContext& Context,

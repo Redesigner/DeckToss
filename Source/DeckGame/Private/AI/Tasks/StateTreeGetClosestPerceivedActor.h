@@ -15,6 +15,9 @@ struct DECKGAME_API FStateGetClosestPerceivedActorTaskInstanceData
 	
 	UPROPERTY(VisibleAnywhere, Category = "Output")
 	FVector SensedLocation;
+
+	UPROPERTY(VisibleAnywhere, Category = "Output")
+	TObjectPtr<AActor> SensedActor;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Context")
 	TObjectPtr<AActor> Actor;
