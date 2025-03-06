@@ -15,6 +15,8 @@ namespace DeckGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Damage, "SetByCaller.Damage");
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Duration, "SetByCaller.Duration");
 
+	UE_DEFINE_GAMEPLAY_TAG(StateTree_Perception, "StateTree.Perception");
+
 #if !UE_BUILD_SHIPPING
 	UE_DEFINE_GAMEPLAY_TAG(Cheat_Immortal, "Cheat.Immortal");
 #endif // !UE_BUILD_SHIPPING

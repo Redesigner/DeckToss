@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GenericTeamAgentInterface.h"
 
 #include "DeckPlayerController.generated.h"
 
@@ -15,7 +16,7 @@ class UUserWidget;
 class UMaterialParameterCollection;
 
 UCLASS()
-class DECKGAME_API ADeckPlayerController : public APlayerController
+class DECKGAME_API ADeckPlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -45,7 +46,16 @@ public:
 
 	UUserWidget* GetRootWidget() const { return RootWidget.Get(); }
 
+	//----------------------------------------------------------------------//
+	// IGenericTeamAgentInterface
+	//----------------------------------------------------------------------//
+	void SetGenericTeamId(const FGenericTeamId& NewTeamId) override;
+	 
+	FGenericTeamId GetGenericTeamId() const override { return TeamId; }
+
 private:
+	FGenericTeamId TeamId;
+	
 	TWeakObjectPtr<UUserWidget> RootWidget;
 
 	bool bIsBlind = false;

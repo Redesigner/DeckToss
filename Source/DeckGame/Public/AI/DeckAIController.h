@@ -10,14 +10,6 @@
 struct FActorPerceptionUpdateInfo;
 class UStateTreeAIComponent;
 
-UENUM(BlueprintType)
-enum class EEnemyAIMovementState : uint8
-{
-	Wandering,
-	Investigating,
-	Following
-};
-
 UCLASS()
 class DECKGAME_API ADeckAIController : public AAIController
 {
@@ -26,23 +18,11 @@ class DECKGAME_API ADeckAIController : public AAIController
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Components, Meta = (AllowPrivateAccess))
 	TObjectPtr<UAIPerceptionComponent> AIPerception;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Behavior, Meta = (AllowPrivateAccess))
-	TObjectPtr<UStateTreeAIComponent> StateTree;
-
-
-public:
-	// Properties must be public in order for StateTree to read it!
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess))
-	EEnemyAIMovementState MovementState = EEnemyAIMovementState::Wandering;
-
-protected:
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnMovementStateChanged(EEnemyAIMovementState OldState, EEnemyAIMovementState NewState);
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Components, Meta = (AllowPrivateAccess))
+	TObjectPtr<UStateTreeAIComponent> StateTreeComponent;
 
 private:
 	ADeckAIController();
-
-	void SetAIMovementState(EEnemyAIMovementState State);
 
 	void BeginPlay() override; 
 

@@ -40,6 +40,14 @@ void UDeckMovementComponent::PhysWalking(float DeltaTime, int32 Iterations)
 		//}
 	}
 
+	if (!RequestedVelocity.IsNearlyZero())
+	{
+		// Treat our requested velocity as a directional vector, since it can be a very large number
+		FVector VelocityDelta = RequestedVelocity - Velocity;
+		VelocityDelta.Z = 0;
+		Velocity += VelocityDelta.GetUnsafeNormal() * Acceleration;
+	}
+
 	if (Velocity.IsNearlyZero())
 	{
 		bIsSprinting = false;
@@ -101,4 +109,29 @@ float UDeckMovementComponent::GetMaxWalkSpeed() const
 	}
 
 	return MaxWalkSpeed;
+}
+
+void UDeckMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	Super::RequestDirectMove(MoveVelocity, bForceMaxSpeed);
+}
+
+void UDeckMovementComponent::RequestPathMove(const FVector& MoveInput)
+{
+	Super::RequestPathMove(MoveInput);
+}
+
+bool UDeckMovementComponent::CanStartPathFollowing() const
+{
+	return true;
+}
+
+bool UDeckMovementComponent::CanStopPathFollowing() const
+{
+	return !IsFalling();
+}
+
+void UDeckMovementComponent::StopActiveMovement()
+{
+	Super::StopActiveMovement();
 }

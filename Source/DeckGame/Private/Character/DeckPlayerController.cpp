@@ -4,23 +4,19 @@
 #include "Character/DeckPlayerController.h"
 
 #include "Character/DeckPlayerState.h"
-#include "Character/PlayerCharacter/PlayerCharacter.h"
-#include "Game/DeckGameMode.h"
 #include "Game/DeckCheatManager.h"
-#include "Ability/DeckGameplayTags.h"
 #include "Ability/DeckAbilitySystemComponent.h"
 
-#include "Kismet/GameplayStatics.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "Blueprint/UserWidget.h"
 #include "Materials/MaterialParameterCollection.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
-#include "Camera/CameraComponent.h"
 
 ADeckPlayerController::ADeckPlayerController()
 {
     CheatClass = UDeckCheatManager::StaticClass();
+    SetGenericTeamId(FGenericTeamId(2));
 }
 
 
@@ -109,6 +105,11 @@ UDeckAbilitySystemComponent* ADeckPlayerController::GetDeckAbilitySystemComponen
     }
 
     return nullptr;
+}
+
+void ADeckPlayerController::SetGenericTeamId(const FGenericTeamId& NewTeamId)
+{
+    TeamId = NewTeamId;
 }
 
 

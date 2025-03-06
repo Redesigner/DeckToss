@@ -87,7 +87,7 @@ TOptional<FVector> ADeckPlayerCameraManager::CalculateCameraPosition() const
 	const float ZoomDistance = FMath::Clamp(FMath::Max(ZoomDistanceX, ZoomDistanceY), CameraMinZoomDistance, CameraMaxZoomDistance);
 
 	return TOptional<FVector>(
-		CameraForward * -ZoomDistance +
+		CameraForward * (CameraForward.Dot(Origin / static_cast<float>(PlayerCount)) - ZoomDistance) +
 		CameraRight * (RightPosition + LeftPosition) / 2.0f +
 		CameraUp * (TopPosition + BottomPosition) / 2.0f);
 }

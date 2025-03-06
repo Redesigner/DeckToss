@@ -25,19 +25,19 @@ public:
 	TEnumAsByte<EMeleeHitboxShape> Shape = Sphere;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector Position;
+	FVector Position = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FRotator Rotation;
+	FRotator Rotation = FRotator::ZeroRotator;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "Shape == 1 || Shape == 2", EditConditionHides, ClampMin = 0.0f))
-	float Radius;
+	float Radius = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "Shape == 2", EditConditionHides, ClampMin = 0.0f))
-	float HalfHeight;
+	float HalfHeight = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "Shape == 0", EditConditionHides, ClampMin = 0.0f))
-	FVector BoxExtents;
+	FVector BoxExtents = FVector::ZeroVector;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

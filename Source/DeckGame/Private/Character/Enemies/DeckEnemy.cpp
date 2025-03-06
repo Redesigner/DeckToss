@@ -3,18 +3,25 @@
 
 #include "Character/Enemies/DeckEnemy.h"
 
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameplayEffect.h"
 
 #include "Ability/Attributes/BaseAttributeSet.h"
 #include "Ability/DeckAbilitySet.h"
 #include "Ability/DeckAbilitySystemComponent.h"
+#include "Character/Components/DeckMovementComponent.h"
 
-ADeckEnemy::ADeckEnemy()
+
+ADeckEnemy::ADeckEnemy(const FObjectInitializer& ObjectInitializer) :
+	ACharacter(ObjectInitializer.SetDefaultSubobjectClass(ACharacter::CharacterMovementComponentName, UDeckMovementComponent::StaticClass()))
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UDeckAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("Base Attribute Set"));
 	AbilitySystemComponent->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::GameplayEffectApplied);
+}
+
+void ADeckEnemy::MoveForward()
+{
+	AddMovementInput(GetActorForwardVector());
 }
 
 void ADeckEnemy::BeginPlay()

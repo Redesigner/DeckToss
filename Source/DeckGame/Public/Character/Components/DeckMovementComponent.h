@@ -34,7 +34,8 @@ private:
 
 	bool bWandering = false;
 
-
+	FVector RequestedMoveVelocity;
+	
 	UDeckMovementComponent();
 
 	void SetUpdatedComponent(USceneComponent* Component) override;
@@ -48,5 +49,11 @@ private:
 
 	float GetMaxWalkSpeed() const;
 
-
+	//  BEGIN INTERFACE Navigation Movement component
+	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
+	void RequestPathMove(const FVector& MoveInput) override;
+	bool CanStartPathFollowing() const override;
+	bool CanStopPathFollowing() const override;
+	void StopActiveMovement() override;
+	// END INTERFACE
 };

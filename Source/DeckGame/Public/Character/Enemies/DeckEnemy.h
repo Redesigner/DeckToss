@@ -35,8 +35,11 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTakeDamage, AActor*, Source, FHitResult, Hit);
 	FOnTakeDamage OnTakeDamage;
 
+	UFUNCTION(BlueprintCallable)
+	void MoveForward();
+	
 private:
-	ADeckEnemy();
+	ADeckEnemy(const FObjectInitializer& ObjectInitializer);
 
 	void BeginPlay() override;
 

@@ -3,45 +3,35 @@
 
 #include "AI/DeckAIController.h"
 
+#include "Logging/StructuredLog.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "StateTree.h"
+
+#include "DeckGame.h"
+#include "Ability/DeckGameplayTags.h"
 
 
 ADeckAIController::ADeckAIController()
 {
+	StateTreeComponent = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("StateTree"));
 	AIPerception = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception"));
-	StateTree = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("StateTree"));
-}
-
-void ADeckAIController::SetAIMovementState(EEnemyAIMovementState State)
-{
-	if (MovementState == State)
-	{
-		return;
-	}
-
-	EEnemyAIMovementState OldState = MovementState;
-	MovementState = State;
-	//Blackboard->SetValueAsEnum("MovementState", static_cast<uint8>(State));
-
-	OnMovementStateChanged(OldState, State);
+	AIPerception->OnTargetPerceptionInfoUpdated.AddUniqueDynamic(this, &ThisClass::TargetPerceptionInfoUpdated);
 }
 
 void ADeckAIController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (StateTree)
-	{
-		StateTree->StartLogic();
-	}
+	
+	StateTreeComponent->StartLogic();
 }
 
 void ADeckAIController::TargetPerceptionInfoUpdated(const FActorPerceptionUpdateInfo& UpdateInfo)
 {
 	if (UpdateInfo.Stimulus.IsActive())
 	{
-		SetAIMovementState(EEnemyAIMovementState::Following);
+		UE_LOGFMT(LogDeckGame, Display, "DeckAIController: Perception sensed '{PerceptionTarget}' with sense '{SenseName}'",
+			UpdateInfo.Target.IsValid() ? UpdateInfo.Target->GetName() : "null",
+			UpdateInfo.Stimulus.Type.Name);
+		StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception);
 	}
 }
 
@@ -61,9 +51,4 @@ void ADeckAIController::TargetPerceptionForgotten(AActor* Actor)
 	}
 
 	AIPerception->GetKnownPerceivedActors(nullptr, PerceivedActors);
-	if (PerceivedActors.IsEmpty())
-	{
-		// If we forget a perception, and don't remember any actors, switch to wandering
-		SetAIMovementState(EEnemyAIMovementState::Wandering);
-	}
 }
