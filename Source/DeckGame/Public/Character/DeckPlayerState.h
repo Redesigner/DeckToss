@@ -80,6 +80,9 @@ public:
 
 	bool IsAlive() const { return Status != EDeckPlayerStatus::Dead; }
 
+	UFUNCTION(BlueprintCallable)
+	EDeckPlayerStatus GetStatus() const { return Status; }
+
 	uint8 GetLivesCount() const { return  LivesCount; }
 
 	DECLARE_MULTICAST_DELEGATE(FOnDeath)
