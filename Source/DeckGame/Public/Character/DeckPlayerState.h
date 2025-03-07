@@ -80,6 +80,8 @@ public:
 
 	bool IsAlive() const { return Status != EDeckPlayerStatus::Dead; }
 
+	uint8 GetLivesCount() const { return  LivesCount; }
+
 	DECLARE_MULTICAST_DELEGATE(FOnDeath)
 	FOnDeath OnDeath;
 
@@ -89,6 +91,9 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnRespawn)
 	FOnRespawn OnRespawn;
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLivesChanged, uint8);
+	FOnLivesChanged OnLivesChanged;
+	
 	UCardDeckComponent* GetCardDeckComponent() const override;
 
 private:

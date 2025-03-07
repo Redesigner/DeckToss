@@ -131,6 +131,8 @@ void ADeckPlayerState::Respawn()
     }
 
     LivesCount--;
+    OnLivesChanged.Broadcast(LivesCount);
+    
     if (GetPawn())
     {
         GetPawn()->Destroy();
