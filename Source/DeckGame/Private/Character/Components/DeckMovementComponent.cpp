@@ -4,8 +4,10 @@
 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemGlobals.h"
+#include "GameplayEffect.h"
 
 #include "Ability/DeckAbilitySystemComponent.h"
+#include "Ability/DeckGameplayTags.h"
 
 UDeckMovementComponent::UDeckMovementComponent()
 {
@@ -21,6 +23,7 @@ void UDeckMovementComponent::SetUpdatedComponent(USceneComponent* Component)
 void UDeckMovementComponent::SetASC(UDeckAbilitySystemComponent* ASC)
 {
 	AbilitySystemComponent = ASC;
+	ASC->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::OnGameplayEffectAppliedToOwner);
 }
 
 void UDeckMovementComponent::SetWandering(bool Wandering)
@@ -30,41 +33,29 @@ void UDeckMovementComponent::SetWandering(bool Wandering)
 
 void UDeckMovementComponent::PhysWalking(float DeltaTime, int32 Iterations)
 {
-	// Should we be doing this cast ever frame for every actor?
-	if (GetOwner())
-	{
-		IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(GetOwner());
-		//if (ASI && ASI->GetAbilitySystemComponent() && ASI->GetAbilitySystemComponent()->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Immobile))
-		//{
-		//	return;
-		//}
-	}
-
-	if (!RequestedVelocity.IsNearlyZero())
-	{
-		// Treat our requested velocity as a directional vector, since it can be a very large number
-		FVector VelocityDelta = RequestedVelocity - Velocity;
-		VelocityDelta.Z = 0;
-		Velocity += VelocityDelta.GetUnsafeNormal() * Acceleration;
-	}
-
 	if (Velocity.IsNearlyZero())
 	{
 		bIsSprinting = false;
 	}
 
+	if (bStunned)
+	{
+		return;	
+	}
+	
 	Super::PhysWalking(DeltaTime, Iterations);
+}
+
+void UDeckMovementComponent::PhysFalling(float deltaTime, int32 Iterations)
+{
+	Super::PhysFalling(deltaTime, Iterations);
 }
 
 FRotator UDeckMovementComponent::GetDeltaRotation(float DeltaTime) const
 {
-	if (GetOwner())
+	if (bStunned)
 	{
-		IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(GetOwner());
-		//if (ASI && ASI->GetAbilitySystemComponent() && ASI->GetAbilitySystemComponent()->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Immobile))
-		//{
-		//	return FRotator();
-		//}
+		return GetActorTransform().Rotator();
 	}
 
 	return Super::GetDeltaRotation(DeltaTime);
@@ -134,4 +125,32 @@ bool UDeckMovementComponent::CanStopPathFollowing() const
 void UDeckMovementComponent::StopActiveMovement()
 {
 	Super::StopActiveMovement();
+}
+
+void UDeckMovementComponent::OnGameplayEffectAppliedToOwner(UAbilitySystemComponent* Source,
+	const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
+{
+	if (Source->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Stun))
+	{
+		bStunned = true;
+	}
+
+	if (Source->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Frozen))
+	{
+		bFrozen = true;
+	}
+}
+
+void UDeckMovementComponent::OnGameplayEffectRemovedFromOwner(UAbilitySystemComponent* Source,
+	const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
+{
+	if (!Source->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Stun))
+	{
+		bStunned = false;
+	}
+	
+	if (!Source->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Frozen))
+	{
+		bFrozen = false;
+	}
 }

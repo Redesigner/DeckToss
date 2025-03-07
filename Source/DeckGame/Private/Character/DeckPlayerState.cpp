@@ -1,17 +1,18 @@
-// Copyright (c) 2024 Stephen Melnick
+// Copyright (c) 2025 Stephen Melnick
 
 #include "Character/DeckPlayerState.h"
 
+#include "GameFramework/GameplayMessageSubsystem.h"
+#include "GameFramework/GameState.h"
+#include "Kismet/GameplayStatics.h"
+#include "Logging/StructuredLog.h"
+
+#include "DeckGame.h"
 #include "Ability/DeckAbilitySystemComponent.h"
 #include "Ability/DeckAbilitySet.h"
 #include "Ability/Attributes/BaseAttributeSet.h"
-#include "DeckGame.h"
 #include "Character/DeckPlayerController.h"
-
-#include "GameFramework/GameplayMessageSubsystem.h"
-#include "Net/UnrealNetwork.h"
-#include "Logging/StructuredLog.h"
-
+#include "Character/Components/CardDeckComponent.h"
 
 ADeckPlayerState::ADeckPlayerState()
 {
@@ -82,13 +83,59 @@ void ADeckPlayerState::GrantAbilities()
 void ADeckPlayerState::InitializeAttributes()
 {
     AttributeSet->SetHealth(AttributeSet->GetMaxHealth());
-    bAlive = true;
+    Status = Alive;
 }
 
 void ADeckPlayerState::OnAttributeSetDeath(FGameplayEffectSpec SpecCauser)
 {
-    bAlive = false;
+    const AGameStateBase* GameState = UGameplayStatics::GetGameState(this);
+    if (!GameState)
+    {
+        Die();
+        return;
+    }
+
+    if (GameState->PlayerArray.Num() <= 1)
+    {
+        Die();
+        return;
+    }
     
+    Status = KnockedOut;
+
+    GetWorldTimerManager().SetTimer(KnockOutTimer, FTimerDelegate::CreateUObject(this, &ADeckPlayerState::Die), KnockOutTime, false);
+    if (KnockedDownEffect)
+    {
+        const FGameplayEffectSpecHandle KnockdownEffectSpecHandle = AbilitySystem->MakeOutgoingSpec(KnockedDownEffect, 1.0f, AbilitySystem->MakeEffectContext());
+        AbilitySystem->ApplyGameplayEffectSpecToSelf(*KnockdownEffectSpecHandle.Data.Get());
+    }
+    OnKnockedOut.Broadcast();
+}
+
+void ADeckPlayerState::Die()
+{
+    Status = EDeckPlayerStatus::Dead;
+    if (LivesCount >= 1)
+    {
+        GetWorldTimerManager().SetTimer(RespawnTimer, FTimerDelegate::CreateUObject(this, &ADeckPlayerState::Respawn), RespawnTime, false);
+    }
     AbilitySystem->RemoveAllActiveEffects();
     OnDeath.Broadcast();
+}
+
+void ADeckPlayerState::Respawn()
+{
+    if (LivesCount == 0)
+    {
+        return;
+    }
+
+    LivesCount--;
+    if (GetPawn())
+    {
+        GetPawn()->Destroy();
+    }
+    
+    GetPlayerController()->ServerRestartPlayer();
+    OnRespawn.Broadcast();
 }

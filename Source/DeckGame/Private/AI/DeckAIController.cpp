@@ -14,7 +14,6 @@ ADeckAIController::ADeckAIController()
 {
 	StateTreeComponent = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("StateTree"));
 	AIPerception = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception"));
-	AIPerception->OnTargetPerceptionInfoUpdated.AddUniqueDynamic(this, &ThisClass::TargetPerceptionInfoUpdated);
 }
 
 void ADeckAIController::BeginPlay()
@@ -22,6 +21,8 @@ void ADeckAIController::BeginPlay()
 	Super::BeginPlay();
 	
 	StateTreeComponent->StartLogic();
+	AIPerception->OnTargetPerceptionInfoUpdated.AddUniqueDynamic(this, &ThisClass::TargetPerceptionInfoUpdated);
+	AIPerception->OnTargetPerceptionForgotten.AddUniqueDynamic(this, &ThisClass::TargetPerceptionForgotten);
 }
 
 void ADeckAIController::TargetPerceptionInfoUpdated(const FActorPerceptionUpdateInfo& UpdateInfo)
@@ -50,7 +51,7 @@ void ADeckAIController::TargetPerceptionForgotten(AActor* Actor)
 		return;
 	}
 
+	UE_LOGFMT(LogDeckGame, Display, "DeckAIController '{ControllerName}': Perception Forgotten", GetName());
 	AIPerception->GetKnownPerceivedActors(nullptr, PerceivedActors);
 	StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception_Forgotten);
-	UE_LOGFMT(LogDeckGame, Display, "DeckAIController '{}': Perception Forgotten", GetName());
 }

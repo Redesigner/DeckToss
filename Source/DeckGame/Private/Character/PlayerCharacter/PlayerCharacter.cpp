@@ -223,6 +223,13 @@ void APlayerCharacter::TeleportToLastSafeLocation()
 
 bool APlayerCharacter::CanJump() const
 {
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if (ASC &&
+		(ASC->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Stun) || ASC->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Frozen)))
+	{
+		return false;
+	}
+	
 	return CanJumpInternal();
 }
 

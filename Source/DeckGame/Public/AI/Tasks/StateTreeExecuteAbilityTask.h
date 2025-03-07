@@ -49,7 +49,7 @@ struct DECKGAME_API FStateTreeExecuteAbilityTask : public FStateTreeTaskCommonBa
 	FText GetDescription(const FGuid& ID, FStateTreeDataView InstanceDataView, const IStateTreeBindingLookup& BindingLookup, EStateTreeNodeFormatting Formatting = EStateTreeNodeFormatting::Text) const override;
 	FName GetIconName() const override
 	{
-		return FName("StateTreeEditorStyle|Node.Text");
+		return FName("StateTreeEditorStyle|Node.Task");
 	}
 	FColor GetIconColor() const override
 	{

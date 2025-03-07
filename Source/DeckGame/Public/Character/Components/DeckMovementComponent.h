@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "ActiveGameplayEffectHandle.h"
 
 #include "DeckMovementComponent.generated.h"
 
+struct FGameplayEffectSpec;
+class UAbilitySystemComponent;
 class UDeckAbilitySystemComponent;
 
 UCLASS()
@@ -32,6 +35,9 @@ public:
 private:
 	TWeakObjectPtr<UDeckAbilitySystemComponent> AbilitySystemComponent;
 
+	void OnGameplayEffectAppliedToOwner(UAbilitySystemComponent* Source, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
+	void OnGameplayEffectRemovedFromOwner(UAbilitySystemComponent* Source, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
+
 	bool bWandering = false;
 
 	FVector RequestedMoveVelocity;
@@ -41,6 +47,8 @@ private:
 	void SetUpdatedComponent(USceneComponent* Component) override;
 
 	void PhysWalking(float DeltaTime, int32 Iterations) override;
+
+	void PhysFalling(float deltaTime, int32 Iterations) override;
 
 	FRotator GetDeltaRotation(float DeltaTime) const override;
 	void PhysicsRotation(float DeltaTime) override;
@@ -56,4 +64,7 @@ private:
 	bool CanStopPathFollowing() const override;
 	void StopActiveMovement() override;
 	// END INTERFACE
+
+	bool bStunned = false;
+	bool bFrozen = false;
 };
