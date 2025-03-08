@@ -34,4 +34,10 @@ private:
 	void PostLogin(APlayerController* NewPlayer) override;
 
 	void StartPlay() override;
+
+	void OnPlayerDeath();
+
+protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void GameOver();
 };

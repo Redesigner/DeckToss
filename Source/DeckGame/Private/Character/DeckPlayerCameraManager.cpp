@@ -117,4 +117,9 @@ void ADeckPlayerCameraManager::UpdateCamera(float DeltaTime)
 		PreviousCameraPosition = CameraView.Location;
 		SetCameraCachePOV(CameraView);
 	}
+	else
+	{
+		CameraView.Location = PreviousCameraPosition;
+		SetCameraCachePOV(CameraView);
+	}
 }

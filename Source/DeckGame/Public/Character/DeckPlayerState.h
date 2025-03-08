@@ -85,14 +85,16 @@ public:
 
 	uint8 GetLivesCount() const { return  LivesCount; }
 
-	DECLARE_MULTICAST_DELEGATE(FOnDeath)
-	FOnDeath OnDeath;
+	TMulticastDelegate<void()> OnDeath;
 
-	DECLARE_MULTICAST_DELEGATE(FOnKnockedOut)
-	FOnKnockedOut OnKnockedOut;
+	TMulticastDelegate<void()> OnKnockedOut;
 
-	DECLARE_MULTICAST_DELEGATE(FOnRespawn)
-	FOnRespawn OnRespawn;
+	TMulticastDelegate<void()> OnRespawn;
+
+	// @TODO: Move this away from delegate
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRespawnTimerStarted, const FTimerHandle, RespawnTimerHandle);
+	UPROPERTY(BlueprintAssignable)
+	FOnRespawnTimerStarted OnRespawnTimerStarted;
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLivesChanged, uint8);
 	FOnLivesChanged OnLivesChanged;

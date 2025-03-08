@@ -104,6 +104,7 @@ void ADeckPlayerState::OnAttributeSetDeath(FGameplayEffectSpec SpecCauser)
     Status = KnockedOut;
 
     GetWorldTimerManager().SetTimer(KnockOutTimer, FTimerDelegate::CreateUObject(this, &ADeckPlayerState::Die), KnockOutTime, false);
+    OnRespawnTimerStarted.Broadcast(KnockOutTimer);
     if (KnockedDownEffect)
     {
         const FGameplayEffectSpecHandle KnockdownEffectSpecHandle = AbilitySystem->MakeOutgoingSpec(KnockedDownEffect, 1.0f, AbilitySystem->MakeEffectContext());
@@ -121,6 +122,11 @@ void ADeckPlayerState::Die()
     }
     AbilitySystem->RemoveAllActiveEffects();
     OnDeath.Broadcast();
+    
+    if (GetPawn())
+    {
+        GetPawn()->Destroy();
+    }
 }
 
 void ADeckPlayerState::Respawn()
