@@ -8,6 +8,7 @@
 
 #include "DeckMovementComponent.generated.h"
 
+struct FActiveGameplayEffect;
 struct FGameplayEffectSpec;
 class UAbilitySystemComponent;
 class UDeckAbilitySystemComponent;
@@ -36,7 +37,7 @@ private:
 	TWeakObjectPtr<UDeckAbilitySystemComponent> AbilitySystemComponent;
 
 	void OnGameplayEffectAppliedToOwner(UAbilitySystemComponent* Source, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
-	void OnGameplayEffectRemovedFromOwner(UAbilitySystemComponent* Source, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
+	void OnGameplayEffectRemovedFromOwner(const FActiveGameplayEffect& ActiveGameplayEffect);
 
 	bool bWandering = false;
 

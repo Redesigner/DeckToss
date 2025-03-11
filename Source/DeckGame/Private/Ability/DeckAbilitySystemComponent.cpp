@@ -8,7 +8,7 @@
 
 UDeckAbilitySystemComponent::UDeckAbilitySystemComponent()
 {
-	SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	UAbilitySystemComponent::SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 }
 
 void UDeckAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)

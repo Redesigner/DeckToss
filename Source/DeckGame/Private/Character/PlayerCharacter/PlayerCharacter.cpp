@@ -6,7 +6,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "Camera/CameraComponent.h"
-#include "EnhancedInputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Logging/StructuredLog.h"
 #include "Kismet/GameplayStatics.h"
@@ -46,6 +45,7 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) 
 	InteractionVolume->SetupAttachment(RootComponent);
 	InteractionVolume->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeBeginOverlap);
 	InteractionVolume->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::InteractVolumeEndOverlap);
+	InteractionVolume->ComponentTags.Add("Interaction Volume");
 
 	Melee = CreateDefaultSubobject<UMeleeComponent>(TEXT("Melee"));
 }

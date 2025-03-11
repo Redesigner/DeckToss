@@ -53,7 +53,7 @@ class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemIn
 	TObjectPtr<UMeleeComponent> Melee;
 
 public:
-	// Consider making Interaction Volume a seprate component so we can use GetComponentByClass instead
+	// Consider making Interaction Volume a separate component so we can use GetComponentByClass instead
 	USphereComponent* GetInteractionVolume() const;
 
 	/// Set the player's color. Must be implemented in blueprint, since mesh refs are difficult

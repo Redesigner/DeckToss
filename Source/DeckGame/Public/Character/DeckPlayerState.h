@@ -45,6 +45,8 @@ class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystem
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, Meta = (AllowPrivateAccess))
 	TObjectPtr<UCardDeckComponent> CardDeck;
 
+
+	//--------------------Lives and Knockdown------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Lives, Meta = (AllowPrivateAccess))
 	uint8 LivesCount = 3;
 
@@ -64,6 +66,15 @@ class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystem
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Lives, Meta = (AllowPrivateAccess))
 	TSubclassOf<UGameplayEffect> KnockedDownEffect;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Lives, Meta = (AllowPrivateAccess))
+	TSubclassOf<UGameplayEffect> RevivedEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Lives, Meta = (AllowPrivateAccess, ClampMin = 0.0f))
+	float RequiredRevivePower = 10.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Lives, Meta = (AllowPrivateAccess))
+	float CurrentRevivePower = 0.0f;
+	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Deck|PlayerState")
 	UDeckAbilitySystemComponent* GetDeckAbilitySystemComponent() const { return AbilitySystem; }
@@ -75,6 +86,12 @@ public:
 
 	/// Set our attributes to their default values;
 	void InitializeAttributes();
+
+	void StartRevival(UAbilitySystemComponent* Reviver);
+
+	void StopRevival(UAbilitySystemComponent* Reviver);
+
+	void IncreaseRevivePower(float PowerIncrement, UAbilitySystemComponent* Reviver);
 
 	void OnAttributeSetDeath(FGameplayEffectSpec SpecCauser);
 
@@ -91,10 +108,16 @@ public:
 
 	TMulticastDelegate<void()> OnRespawn;
 
-	// @TODO: Move this away from delegate
+	TMulticastDelegate<void()> OnRevived;
+
+	// @TODO: Move this away from delegates
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRespawnTimerStarted, const FTimerHandle, RespawnTimerHandle);
 	UPROPERTY(BlueprintAssignable)
 	FOnRespawnTimerStarted OnRespawnTimerStarted;
+	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRespawnTimerStopped);
+	UPROPERTY(BlueprintAssignable)
+	FOnRespawnTimerStopped OnRespawnTimerStopped;
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLivesChanged, uint8);
 	FOnLivesChanged OnLivesChanged;
@@ -106,7 +129,7 @@ private:
 
 	bool bAbilitiesGranted = false;
 
-	FTimerHandle KnockOutTimer;
+	FTimerHandle KnockoutTimer;
 	FTimerHandle RespawnTimer;
 
 	TQueue<FDeckMessage> UnprocessedNotifications;
@@ -118,6 +141,8 @@ private:
 	void FlushNotifications();
 
 	void Die();
+
+	void Revive(UAbilitySystemComponent* Reviver);
 
 	void Respawn();
 

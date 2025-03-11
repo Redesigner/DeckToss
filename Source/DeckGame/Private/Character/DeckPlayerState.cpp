@@ -86,6 +86,25 @@ void ADeckPlayerState::InitializeAttributes()
     Status = Alive;
 }
 
+void ADeckPlayerState::StartRevival(UAbilitySystemComponent* Reviver)
+{
+    GetWorldTimerManager().PauseTimer(KnockoutTimer);
+}
+
+void ADeckPlayerState::StopRevival(UAbilitySystemComponent* Reviver)
+{
+    GetWorldTimerManager().UnPauseTimer(KnockoutTimer);
+}
+
+void ADeckPlayerState::IncreaseRevivePower(float PowerIncrement, UAbilitySystemComponent* Reviver)
+{
+    CurrentRevivePower += PowerIncrement;
+    if (CurrentRevivePower >= RequiredRevivePower)
+    {
+        Revive(Reviver);
+    }
+}
+
 void ADeckPlayerState::OnAttributeSetDeath(FGameplayEffectSpec SpecCauser)
 {
     const AGameStateBase* GameState = UGameplayStatics::GetGameState(this);
@@ -102,9 +121,10 @@ void ADeckPlayerState::OnAttributeSetDeath(FGameplayEffectSpec SpecCauser)
     }
     
     Status = KnockedOut;
-
-    GetWorldTimerManager().SetTimer(KnockOutTimer, FTimerDelegate::CreateUObject(this, &ADeckPlayerState::Die), KnockOutTime, false);
-    OnRespawnTimerStarted.Broadcast(KnockOutTimer);
+    CurrentRevivePower = 0.0f;
+    
+    GetWorldTimerManager().SetTimer(KnockoutTimer, FTimerDelegate::CreateUObject(this, &ADeckPlayerState::Die), KnockOutTime, false);
+    OnRespawnTimerStarted.Broadcast(KnockoutTimer);
     if (KnockedDownEffect)
     {
         const FGameplayEffectSpecHandle KnockdownEffectSpecHandle = AbilitySystem->MakeOutgoingSpec(KnockedDownEffect, 1.0f, AbilitySystem->MakeEffectContext());
@@ -126,6 +146,21 @@ void ADeckPlayerState::Die()
     if (GetPawn())
     {
         GetPawn()->Destroy();
+    }
+}
+
+void ADeckPlayerState::Revive(UAbilitySystemComponent* Reviver)
+{
+    UE_LOGFMT(LogDeckGame, Display, "DeckPlayerState: '{SelfName}' revived by player '{ReviverName}'", GetName(), Reviver ? Reviver->GetName() : "null");
+    GetWorldTimerManager().ClearTimer(KnockoutTimer);
+    Status = Alive;
+    OnRespawnTimerStopped.Broadcast();
+    OnRevived.Broadcast();
+
+    if (RevivedEffect)
+    {
+        const FGameplayEffectSpecHandle KnockdownEffectSpecHandle = AbilitySystem->MakeOutgoingSpec(RevivedEffect, 1.0f, AbilitySystem->MakeEffectContext());
+        AbilitySystem->ApplyGameplayEffectSpecToSelf(*KnockdownEffectSpecHandle.Data.Get());
     }
 }
 

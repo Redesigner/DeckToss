@@ -5,7 +5,9 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemGlobals.h"
 #include "GameplayEffect.h"
+#include "Logging/StructuredLog.h"
 
+#include "DeckGame.h"
 #include "Ability/DeckAbilitySystemComponent.h"
 #include "Ability/DeckGameplayTags.h"
 
@@ -24,6 +26,7 @@ void UDeckMovementComponent::SetASC(UDeckAbilitySystemComponent* ASC)
 {
 	AbilitySystemComponent = ASC;
 	ASC->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::OnGameplayEffectAppliedToOwner);
+	ASC->OnAnyGameplayEffectRemovedDelegate().AddUObject(this, &ThisClass::OnGameplayEffectRemovedFromOwner);
 }
 
 void UDeckMovementComponent::SetWandering(bool Wandering)
@@ -55,7 +58,7 @@ FRotator UDeckMovementComponent::GetDeltaRotation(float DeltaTime) const
 {
 	if (bStunned)
 	{
-		return GetActorTransform().Rotator();
+		return FRotator();
 	}
 
 	return Super::GetDeltaRotation(DeltaTime);
@@ -141,15 +144,14 @@ void UDeckMovementComponent::OnGameplayEffectAppliedToOwner(UAbilitySystemCompon
 	}
 }
 
-void UDeckMovementComponent::OnGameplayEffectRemovedFromOwner(UAbilitySystemComponent* Source,
-	const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
+void UDeckMovementComponent::OnGameplayEffectRemovedFromOwner(const FActiveGameplayEffect& ActiveGameplayEffect)
 {
-	if (!Source->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Stun))
+	if (!AbilitySystemComponent->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Stun))
 	{
 		bStunned = false;
 	}
 	
-	if (!Source->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Frozen))
+	if (!AbilitySystemComponent->HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Frozen))
 	{
 		bFrozen = false;
 	}
