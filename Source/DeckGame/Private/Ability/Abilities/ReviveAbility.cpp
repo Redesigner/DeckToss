@@ -41,6 +41,7 @@ void UReviveAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	if (OverlappingActors.IsEmpty())
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		return;
 	}
 
 	ADeckPlayerState* PlayerToRevive = nullptr;
@@ -86,6 +87,7 @@ void UReviveAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 	}), MaxTimeBetweenPresses, false);
+	UE_LOGFMT(LogDeckGame, Display, "Revive Ability '{AbilityName}' successfully activated.", GetName());
 }
 
 void UReviveAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -100,15 +102,17 @@ void UReviveAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const F
 	
 	if (bWasCancelled)
 	{
+		Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+		//UE_LOGFMT(LogDeckGame, Display, "Revive ability cancelled.");
 		return;
 	}
 	
-	UE_LOGFMT(LogDeckGame, Display, "Revive ability ended.");
+	//UE_LOGFMT(LogDeckGame, Display, "Revive ability ended.");
 	if (AppliedReviveEffect.IsValid())
 	{
 		if (ActorInfo->AbilitySystemComponent->RemoveActiveGameplayEffect(AppliedReviveEffect))
 		{
-			UE_LOGFMT(LogDeckGame, Display, "Revive ability: Removing gameplay effect");
+			//UE_LOGFMT(LogDeckGame, Display, "Revive ability: Removing gameplay effect");
 		}
 	}
 	if (RevivalTarget.IsValid())
@@ -118,6 +122,8 @@ void UReviveAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const F
 		RevivalTarget->StopRevival(ActorInfo->AbilitySystemComponent.Get());
 		RevivalTarget = nullptr;
 	}
+
+	ActorInfo->AbilitySystemComponent->FindAbilitySpecFromHandle(Handle)->InputPressed = false;
 }
 
 void UReviveAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -138,4 +144,51 @@ void UReviveAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const
 	}
 
 	RevivalTarget->IncreaseRevivePower(1.0f, ActorInfo->AbilitySystemComponent.Get());
+}
+
+bool UReviveAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+{
+	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
+	{
+		return false;
+	}
+
+	if (!ActorInfo->AvatarActor.IsValid())
+	{
+		return false;
+	}
+	
+	UShapeComponent* InteractionVolume = Cast<UShapeComponent>(ActorInfo->AvatarActor->FindComponentByTag(UShapeComponent::StaticClass(), "Interaction Volume"));
+	if (!InteractionVolume)
+	{
+		return false;
+	}
+
+	TArray<AActor*> OverlappingActors;
+	InteractionVolume->GetOverlappingActors(OverlappingActors, APlayerCharacter::StaticClass());
+	if (OverlappingActors.IsEmpty())
+	{
+		return false;
+	}
+
+	ADeckPlayerState* PlayerToRevive = nullptr;
+	for (AActor* OverlappingActor : OverlappingActors)
+	{
+		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OverlappingActor);
+		if (!PlayerCharacter)
+		{
+			continue;
+		}
+		
+		ADeckPlayerState* PlayerState = Cast<ADeckPlayerState>(PlayerCharacter->GetPlayerState());
+		if (PlayerState && PlayerState->GetStatus() == KnockedOut)
+		{
+			PlayerToRevive = PlayerState;
+			break;
+		}
+	}
+
+	return PlayerToRevive != nullptr;
 }

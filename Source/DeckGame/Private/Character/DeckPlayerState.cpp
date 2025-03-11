@@ -101,7 +101,10 @@ void ADeckPlayerState::IncreaseRevivePower(float PowerIncrement, UAbilitySystemC
     CurrentRevivePower += PowerIncrement;
     if (CurrentRevivePower >= RequiredRevivePower)
     {
-        Revive(Reviver);
+        GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this, Reviver]()
+        {
+            Revive(Reviver);
+        }));
     }
 }
 

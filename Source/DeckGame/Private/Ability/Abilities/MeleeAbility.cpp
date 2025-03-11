@@ -3,13 +3,14 @@
 
 #include "Ability/Abilities/MeleeAbility.h"
 
-#include "Ability/DeckGameplayTags.h"
-#include "Character/Components/MeleeComponent.h"
-
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h" 
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "Logging/StructuredLog.h"
 
+#include "DeckGame.h"
+#include "Ability/DeckGameplayTags.h"
+#include "Character/Components/MeleeComponent.h"
 
 void UMeleeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -33,6 +34,7 @@ void UMeleeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	MeleeComponent = Melee;
 	ActorHitDelegateHandle = MeleeComponent->OnActorHit.AddUObject(this, &ThisClass::OnEnemyHit);
 
+	UE_LOGFMT(LogDeckGame, Display, "Melee Ability '{AbilityName}' activated.", GetName());
 	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("MeleeAnimation"), MeleeAnimation);
 	// PlayMontageTask->OnBlendOut.AddDynamic(this, &ThisClass::ForceEndAbility);
 	PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::ForceEndAbility);

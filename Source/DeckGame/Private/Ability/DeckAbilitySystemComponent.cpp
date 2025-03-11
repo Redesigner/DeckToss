@@ -99,6 +99,8 @@ void UDeckAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 			if (AbilitySpec->IsActive())
 			{
 				// Ability is active so pass along the input event.
+				UE_LOGFMT(LogDeckGame, Verbose, "DeckAbilitySystemComponent: Ability '{AbilityName}' input pressed.",
+					AbilitySpec->Ability ? AbilitySpec->Ability->GetName() : "null");
 				AbilitySpec->InputPressed = true;
 				AbilitySpecInputPressed(*AbilitySpec);
 			}
@@ -164,6 +166,8 @@ void UDeckAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 		{
 			if (AbilitySpec->Ability)
 			{
+				UE_LOGFMT(LogDeckGame, Verbose, "DeckAbilitySystemComponent: Ability '{AbilityName}' input released.",
+					AbilitySpec->Ability ? AbilitySpec->Ability->GetName() : "null");
 				AbilitySpec->InputPressed = false;
 
 				if (AbilitySpec->IsActive())
