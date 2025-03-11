@@ -128,7 +128,7 @@ void ADeckPlayerState::OnAttributeSetDeath(FGameplayEffectSpec SpecCauser)
     if (KnockedDownEffect)
     {
         const FGameplayEffectSpecHandle KnockdownEffectSpecHandle = AbilitySystem->MakeOutgoingSpec(KnockedDownEffect, 1.0f, AbilitySystem->MakeEffectContext());
-        AbilitySystem->ApplyGameplayEffectSpecToSelf(*KnockdownEffectSpecHandle.Data.Get());
+        KnockdownEffectHandle = AbilitySystem->ApplyGameplayEffectSpecToSelf(*KnockdownEffectSpecHandle.Data.Get());
     }
     OnKnockedOut.Broadcast();
 }
@@ -156,7 +156,8 @@ void ADeckPlayerState::Revive(UAbilitySystemComponent* Reviver)
     Status = Alive;
     OnRespawnTimerStopped.Broadcast();
     OnRevived.Broadcast();
-
+    AbilitySystem->RemoveActiveGameplayEffect(KnockdownEffectHandle);
+    
     if (RevivedEffect)
     {
         const FGameplayEffectSpecHandle KnockdownEffectSpecHandle = AbilitySystem->MakeOutgoingSpec(RevivedEffect, 1.0f, AbilitySystem->MakeEffectContext());

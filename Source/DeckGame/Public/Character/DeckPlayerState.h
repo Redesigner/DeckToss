@@ -129,6 +129,8 @@ private:
 
 	bool bAbilitiesGranted = false;
 
+	FActiveGameplayEffectHandle KnockdownEffectHandle;
+	
 	FTimerHandle KnockoutTimer;
 	FTimerHandle RespawnTimer;
 

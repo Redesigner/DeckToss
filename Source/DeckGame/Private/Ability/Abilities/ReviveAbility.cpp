@@ -93,6 +93,11 @@ void UReviveAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const F
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
+	if (ButtonPressTimer.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ButtonPressTimer);
+	}
+	
 	if (bWasCancelled)
 	{
 		return;
