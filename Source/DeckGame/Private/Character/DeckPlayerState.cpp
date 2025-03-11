@@ -86,9 +86,20 @@ void ADeckPlayerState::InitializeAttributes()
     Status = Alive;
 }
 
-void ADeckPlayerState::StartRevival(UAbilitySystemComponent* Reviver)
+bool ADeckPlayerState::StartRevival(UAbilitySystemComponent* Reviver)
 {
+    if (Status != KnockedOut)
+    {
+        return false;
+    }
+
+    if (GetWorldTimerManager().IsTimerPaused(KnockoutTimer))
+    {
+        return false;
+    }
+    
     GetWorldTimerManager().PauseTimer(KnockoutTimer);
+    return true;
 }
 
 void ADeckPlayerState::StopRevival(UAbilitySystemComponent* Reviver)

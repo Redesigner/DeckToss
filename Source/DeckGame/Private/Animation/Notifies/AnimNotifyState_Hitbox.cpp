@@ -30,7 +30,17 @@ void UAnimNotifyState_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 
 void UAnimNotifyState_Hitbox::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
+	if (!MeshComp)
+	{
+		return;
+	}
+	
 	AActor* OwnerActor = MeshComp->GetOwner();
+	if (!OwnerActor)
+	{
+		return;
+	}
+	
 	UMeleeComponent* MeleeComponent = OwnerActor->GetComponentByClass<UMeleeComponent>();
 	if (!MeleeComponent)
 	{

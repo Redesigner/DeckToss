@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Stephen Melnick
+// Copyright (c) 2025 Stephen Melnick
 
 #pragma once
 
@@ -87,7 +87,7 @@ public:
 	/// Set our attributes to their default values;
 	void InitializeAttributes();
 
-	void StartRevival(UAbilitySystemComponent* Reviver);
+	bool StartRevival(UAbilitySystemComponent* Reviver);
 
 	void StopRevival(UAbilitySystemComponent* Reviver);
 

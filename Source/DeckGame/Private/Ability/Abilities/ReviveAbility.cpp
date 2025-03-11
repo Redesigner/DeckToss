@@ -8,6 +8,7 @@
 #include "Logging/StructuredLog.h"
 
 #include "DeckGame.h"
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Character/PlayerCharacter/PlayerCharacter.h"
 #include "Character/DeckPlayerState.h"
 
@@ -67,8 +68,13 @@ void UReviveAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		return;
 	}
 
-	UE_LOGFMT(LogDeckGame, Display, "Revive ability started.");
-	PlayerToRevive->StartRevival(ActorInfo->AbilitySystemComponent.Get());
+	//UE_LOGFMT(LogDeckGame, Display, "Revive ability started.");
+	if (!PlayerToRevive->StartRevival(ActorInfo->AbilitySystemComponent.Get()))
+	{
+		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		return;
+	}
+	
 	if (ReviveEffect)
 	{
 		AppliedReviveEffect = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, MakeOutgoingGameplayEffectSpec(ReviveEffect));
@@ -77,7 +83,7 @@ void UReviveAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		UE_LOGFMT(LogDeckGame, Warning, "Revive Ability: No gameplay effect was set for revive ability: '{AbilityName}'", GetName());
 	}
-
+	
 	RevivalTarget = PlayerToRevive;
 	TargetRevivedDelegateHandle = PlayerToRevive->OnRevived.AddWeakLambda(this, [this, Handle, ActorInfo, ActivationInfo]()
 	{
@@ -87,6 +93,19 @@ void UReviveAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 	}), MaxTimeBetweenPresses, false);
+
+
+	if (ReviveAnimation)
+	{
+		UAbilityTask_PlayMontageAndWait* PlayReviveAnimation = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+			this, "Play Revive Animation", ReviveAnimation);
+		PlayReviveAnimation->ReadyForActivation();
+	}
+	else
+	{
+		UE_LOGFMT(LogDeckGame, Warning, "Revive Ability: No revive animation was set for revive ability: '{AbilityName}'", GetName());
+	}
+	
 	UE_LOGFMT(LogDeckGame, Display, "Revive Ability '{AbilityName}' successfully activated.", GetName());
 }
 

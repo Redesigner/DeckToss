@@ -20,6 +20,9 @@ class DECKGAME_API UReviveAbility : public UDeckGameplayAbility
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Meta = (AllowPrivateAccess, ClampMin = 0.0f))
 	float MaxTimeBetweenPresses = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAnimMontage> ReviveAnimation;
 	
 	UReviveAbility();
 	
