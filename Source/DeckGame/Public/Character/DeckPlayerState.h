@@ -27,7 +27,8 @@ enum EDeckPlayerStatus : uint8
 };
 
 UCLASS()
-class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystemInterface, public ICardDeckInterface
+class DECKGAME_API ADeckPlayerState : public APlayerState,
+	public IAbilitySystemInterface, public ICardDeckInterface
 {
 	GENERATED_BODY()
 	

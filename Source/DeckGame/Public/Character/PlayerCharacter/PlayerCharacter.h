@@ -26,7 +26,8 @@ struct FInputActionInstance;
 
 // @TODO: Separate playercharacter logic to be reused for enemies into ADeckCharacter class
 UCLASS()
-class DECKGAME_API APlayerCharacter : public ACharacter, public IAbilitySystemInterface, public IGameplayCueInterface, public ICardDeckInterface
+class DECKGAME_API APlayerCharacter : public ACharacter,
+	public IAbilitySystemInterface, public IGameplayCueInterface, public ICardDeckInterface
 {
 	GENERATED_BODY()
 

@@ -25,4 +25,7 @@ public:
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 
 	TArray<FGameplayTag> InputHeldTags;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bCanAbilityBeCancelled = false;
 };

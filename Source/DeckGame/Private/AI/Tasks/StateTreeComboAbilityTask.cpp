@@ -63,6 +63,7 @@ EStateTreeRunStatus FStateTreeComboAbilityTask::EnterState(FStateTreeExecutionCo
 	if (InstanceData.AbilitySystemComponent->TryActivateAbility(SpecToActivate))
 	{
 		InstanceData.bRunning = true;
+		InstanceData.AbilitySystemComponent->bCanAnimationBeCancelled = false;
 		return EStateTreeRunStatus::Running;
 	}
 

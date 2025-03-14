@@ -35,6 +35,9 @@ public:
 
 	FOnAbilitiesChanged OnAbilitiesChanged;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	bool bCanAnimationBeCancelled = false;
+
 protected:
 	// Abilities grouped together by InputTags
 	TArray<TArray<FGameplayAbilitySpecHandle>> InputPressedSpecs;
