@@ -13,6 +13,7 @@
 #include "DeckGame.h"
 #include "Ability/DeckAbilitySystemComponent.h"
 #include "Ability/DeckGameplayTags.h"
+#include "Ability/Combos/StateTreeComboComponent.h"
 #include "Character/Components/CardDeckComponent.h"
 #include "Character/Components/DeckInputComponent.h"
 #include "Character/Components/DeckMovementComponent.h"
@@ -90,7 +91,14 @@ void APlayerCharacter::BindActions(UInputComponent* PlayerInputComponent)
 
 	TArray<uint32> BindHandles;
 	DeckInputComponent->BindAbilityActions(InputConfig, this, &APlayerCharacter::Input_AbilityInputTagPressed, &APlayerCharacter::Input_AbilityInputTagReleased, BindHandles);
-
+	if (ADeckPlayerState* DeckPlayerState = Cast<ADeckPlayerState>(GetPlayerState()))
+	{
+		if (UStateTreeComboComponent* Combo = DeckPlayerState->GetComboComponent())
+		{
+			DeckInputComponent->BindAbilityActions(InputConfig, Combo, &UStateTreeComboComponent::Input_AbilityInputTagPressed, &UStateTreeComboComponent::Input_AbilityInputTagReleased, BindHandles);
+		}
+	}
+	
 	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Move,
 		ETriggerEvent::Triggered, this, &ThisClass::Move, /*bLogIfNotFound=*/ false);
 	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Look,

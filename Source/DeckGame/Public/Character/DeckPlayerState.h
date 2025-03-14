@@ -12,6 +12,7 @@
 
 #include "DeckPlayerState.generated.h"
 
+class UStateTreeComboComponent;
 class UBaseAttributeSet;
 class UCardDeckComponent;
 class UDeckAbilitySet;
@@ -44,6 +45,9 @@ class DECKGAME_API ADeckPlayerState : public APlayerState, public IAbilitySystem
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, Meta = (AllowPrivateAccess))
 	TObjectPtr<UCardDeckComponent> CardDeck;
+
+	UPROPERTY(Instanced, VisibleAnywhere, BlueprintReadOnly, Category = Components, Meta = (AllowPrivateAccess))
+	TObjectPtr<UStateTreeComboComponent> ComboComponent;
 
 
 	//--------------------Lives and Knockdown------------------
@@ -123,6 +127,8 @@ public:
 	FOnLivesChanged OnLivesChanged;
 	
 	UCardDeckComponent* GetCardDeckComponent() const override;
+
+	UStateTreeComboComponent* GetComboComponent() const;
 
 private:
 	bool bReceivingNotifications = false;
