@@ -11,6 +11,7 @@
 #include "Ability/DeckAbilitySystemComponent.h"
 #include "Ability/DeckAbilitySet.h"
 #include "Ability/Attributes/BaseAttributeSet.h"
+#include "Ability/Combos/StateTreeComboComponent.h"
 #include "Character/DeckPlayerController.h"
 #include "Character/Components/CardDeckComponent.h"
 
@@ -22,6 +23,7 @@ ADeckPlayerState::ADeckPlayerState()
     AttributeSet->OnDeath.AddUObject(this, &ThisClass::OnAttributeSetDeath);
 
     CardDeck = CreateDefaultSubobject<UCardDeckComponent>(TEXT("CardDeck"));
+    ComboComponent = CreateDefaultSubobject<UStateTreeComboComponent>(TEXT("ComboComponent"));
 }
 
 
@@ -35,6 +37,11 @@ UCardDeckComponent* ADeckPlayerState::GetCardDeckComponent() const
     return CardDeck;
 }
 
+UStateTreeComboComponent* ADeckPlayerState::GetComboComponent() const
+{
+    return ComboComponent;
+}
+
 
 UBaseAttributeSet* ADeckPlayerState::GetAttributeSet() const
 {
@@ -43,10 +50,14 @@ UBaseAttributeSet* ADeckPlayerState::GetAttributeSet() const
 
 void ADeckPlayerState::BeginPlay()
 {
+    Super::BeginPlay();
+    
     if (ADeckPlayerController* DeckPlayerController = Cast<ADeckPlayerController>(GetPlayerController()))
     {
         DeckPlayerController->OnHUDCreated.AddUObject(this, &ThisClass::FlushNotifications);
     }
+
+    ComboComponent->StartLogic();
 }
 
 void ADeckPlayerState::FlushNotifications()
