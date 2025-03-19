@@ -30,7 +30,7 @@ void UStateTreeComboComponent::Input_AbilityInputTagPressed(FGameplayTag InputTa
 	{
 		return;
 	}
-	UE_LOGFMT(LogDeckGame, Display, "StateTree Combo received input '{Tag}'", InputTag.ToString());
+	//UE_LOGFMT(LogDeckGame, Display, "StateTree Combo received input '{Tag}'", InputTag.ToString());
 	InputHeldTags.Add(InputTag);
 	SendStateTreeEvent(InputTag, FConstStructView::Make(InputTag));
 }

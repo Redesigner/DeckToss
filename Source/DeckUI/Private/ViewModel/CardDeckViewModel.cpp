@@ -37,7 +37,13 @@ void UCardDeckViewModel::CardsChanged(const TArray<FCardDeckEntry>& Cards)
 	for (const FCardDeckEntry& Card : Cards)
 	{
 		UCardDeckUIData* NewEntry = NewObject<UCardDeckUIData>();
-		NewEntry->Entry.CardName = FText::FromString(Card.CardTag.ToString());
+		FString CardName = Card.CardTag.ToString();
+		int32 Separator = 0;
+		if (CardName.FindChar('.', Separator))
+		{
+			CardName = CardName.RightChop(Separator + 1);
+		}
+		NewEntry->Entry.CardName = FText::FromString(CardName);
 		CardData.Add(NewEntry);
 	}
 	BroadcastFieldValueChanged(ThisClass::FFieldNotificationClassDescriptor::CardData);

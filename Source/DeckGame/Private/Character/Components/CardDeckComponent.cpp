@@ -106,7 +106,7 @@ void UCardDeckComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 	TOptional<uint8> CardSlot = GetSlotIndex(InputTag);
 	if (CardSlot && CardSlot.GetValue() < Cards.Num())
 	{
-		if (Cards[CardSlot.GetValue()].bActive)
+		if (Cards[CardSlot.GetValue()].bActive || !Cards[CardSlot.GetValue()].GrantedAbility.IsValid())
 		{
 			return;
 		}
