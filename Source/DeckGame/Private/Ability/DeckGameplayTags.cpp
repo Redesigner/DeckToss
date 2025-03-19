@@ -9,6 +9,10 @@ namespace DeckGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look, "InputTag.Look", "Look input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Attack, "InputTag.Attack", "Default attack input.");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Slot_0, "InputTag.Slot.0", "Input Tag for first card slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Slot_1, "InputTag.Slot.1", "Input Tag for second card slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Slot_2, "InputTag.Slot.2", "Input Tag for third card slot.");
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEffect_Stun, "GameplayEffect.Stun", "Character cannot move, but can still be moved and fall due to gravity");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEffect_Frozen, "GameplayEffect.Frozen", "Character cannot move, and is not affected by external forces.");
 	

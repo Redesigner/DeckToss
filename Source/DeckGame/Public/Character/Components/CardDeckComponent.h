@@ -20,6 +20,9 @@ struct DECKGAME_API FCardDeckEntry
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	FGameplayAbilitySpecHandle GrantedAbility;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	bool bActive = false;
 };
 
 UCLASS()
@@ -34,11 +37,21 @@ public:
 
 	void GiveCard(ACardItem* CardItem);
 
-	const TArray<FCardDeckEntry> GetCards() const;
+	const TArray<FCardDeckEntry>& GetCards() const;
 
 	FOnCardsChanged OnCardsChanged;
 
+	FGameplayAbilitySpecHandle GetAbilityBySlotIndex(uint8 Index) const;
+
+	DECLARE_DELEGATE_OneParam(FOnCardAbilityPressed, FGameplayAbilitySpecHandle);
+	FOnCardAbilityPressed OnCardAbilityPressed;
+
+	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+	
 private:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))
 	TArray<FCardDeckEntry> Cards;
+
+	static TOptional<uint8> GetSlotIndex(FGameplayTag InputTag);
 };

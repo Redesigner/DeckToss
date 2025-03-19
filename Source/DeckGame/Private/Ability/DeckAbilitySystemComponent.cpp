@@ -146,6 +146,7 @@ void UDeckAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 				UE_LOGFMT(LogDeckGame, Verbose, "DeckAbilitySystemComponent: Ability {AbilityName}, currently being held, consumed input.", DeckAbility->GetName());
 				break;
 			}
+			// UE_LOGFMT(LogDeckGame, Display, "DeckAbilitySystemComponent: Trying to activate Ability {AbilityName}", DeckAbility->GetName());
 			if (TryActivateAbility(AbilitySpec->Handle))
 			{
 				if (DeckAbility && DeckAbility->ConsumesInput())

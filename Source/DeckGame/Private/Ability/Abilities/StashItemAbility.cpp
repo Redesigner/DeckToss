@@ -51,4 +51,6 @@ void UStashItemAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	CardDeck->GiveCard(HeldItem);
 	HeldItem->Destroy();
+
+	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }

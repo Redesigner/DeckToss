@@ -81,7 +81,6 @@ private:
 	void PossessedBy(AController* NewController) override;
 
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
-
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 
 	// Native Actions

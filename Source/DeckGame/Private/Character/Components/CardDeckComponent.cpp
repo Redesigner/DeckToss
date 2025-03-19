@@ -19,6 +19,11 @@
 UCardDeckComponent::UCardDeckComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		Cards.Add({FGameplayTag(), FGameplayAbilitySpecHandle()});
+	}
 }
 
 void UCardDeckComponent::GiveCard(ACardItem* CardItem)
@@ -59,14 +64,82 @@ void UCardDeckComponent::GiveCard(ACardItem* CardItem)
 	}
 
 	FGameplayAbilitySpec NewSpec = FGameplayAbilitySpec(CardEntry.CardAbility->GetDefaultObject<UDeckGameplayAbility>(), 1);
-	NewSpec.GetDynamicSpecSourceTags().AddTag(DeckGameplayTags::InputTag_Attack);
+	// NewSpec.GetDynamicSpecSourceTags().AddTag(DeckGameplayTags::InputTag_Attack);
 	FGameplayAbilitySpecHandle NewAbilityHandle = ASC->GiveAbility(NewSpec);
-	Cards.Add(FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle));
+
+	bool bEmptySlot = false;
+	for (int i = 0; i < 3; ++i)
+	{
+		if (!Cards[i].CardTag.IsValid())
+		{
+			Cards[i] = FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle);
+			bEmptySlot = true;
+			break;
+		}
+	}
+
+	if (!bEmptySlot)
+	{
+		Cards.Add(FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle));
+	}
 
 	OnCardsChanged.Broadcast(Cards);
 }
 
-const TArray<FCardDeckEntry> UCardDeckComponent::GetCards() const
+const TArray<FCardDeckEntry>& UCardDeckComponent::GetCards() const
 {
 	return Cards;
+}
+
+FGameplayAbilitySpecHandle UCardDeckComponent::GetAbilityBySlotIndex(uint8 Index) const
+{
+	if (Index >= Cards.Num())
+	{
+		return FGameplayAbilitySpecHandle();
+	}
+
+	return Cards[Index].GrantedAbility;
+}
+
+void UCardDeckComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	TOptional<uint8> CardSlot = GetSlotIndex(InputTag);
+	if (CardSlot && CardSlot.GetValue() < Cards.Num())
+	{
+		if (Cards[CardSlot.GetValue()].bActive)
+		{
+			return;
+		}
+		Cards[CardSlot.GetValue()].bActive = true;
+		OnCardAbilityPressed.ExecuteIfBound(Cards[CardSlot.GetValue()].GrantedAbility);
+	}
+}
+
+void UCardDeckComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	TOptional<uint8> CardSlot = GetSlotIndex(InputTag);
+	if (CardSlot && CardSlot.GetValue() < Cards.Num())
+	{
+		Cards[CardSlot.GetValue()].bActive = false;
+	}
+}
+
+TOptional<uint8> UCardDeckComponent::GetSlotIndex(FGameplayTag InputTag)
+{
+	if (InputTag == DeckGameplayTags::InputTag_Slot_0)
+	{
+		return 0;
+	}
+
+	if (InputTag == DeckGameplayTags::InputTag_Slot_1)
+	{
+		return 1;
+	}
+
+	if (InputTag == DeckGameplayTags::InputTag_Slot_2)
+	{
+		return 2;
+	}
+
+	return TOptional<uint8>();
 }

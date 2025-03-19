@@ -95,7 +95,14 @@ void APlayerCharacter::BindActions(UInputComponent* PlayerInputComponent)
 	{
 		if (UStateTreeComboComponent* Combo = DeckPlayerState->GetComboComponent())
 		{
-			DeckInputComponent->BindAbilityActions(InputConfig, Combo, &UStateTreeComboComponent::Input_AbilityInputTagPressed, &UStateTreeComboComponent::Input_AbilityInputTagReleased, BindHandles);
+			DeckInputComponent->BindAbilityActions(InputConfig, Combo, &UStateTreeComboComponent::Input_AbilityInputTagPressed,
+				&UStateTreeComboComponent::Input_AbilityInputTagReleased, BindHandles);
+		}
+
+		if (UCardDeckComponent* CardDeckComponent = DeckPlayerState->GetCardDeckComponent())
+		{
+			DeckInputComponent->BindAbilityActions(InputConfig, CardDeckComponent, &UCardDeckComponent::Input_AbilityInputTagPressed,
+				&UCardDeckComponent::Input_AbilityInputTagReleased, BindHandles);
 		}
 	}
 	

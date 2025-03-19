@@ -24,6 +24,10 @@ ADeckPlayerState::ADeckPlayerState()
 
     CardDeck = CreateDefaultSubobject<UCardDeckComponent>(TEXT("CardDeck"));
     ComboComponent = CreateDefaultSubobject<UStateTreeComboComponent>(TEXT("ComboComponent"));
+    CardDeck->OnCardAbilityPressed.BindLambda([this](FGameplayAbilitySpecHandle SpecHandle)
+    {
+        AbilitySystem->TryActivateAbility(SpecHandle);
+    });
 }
 
 
