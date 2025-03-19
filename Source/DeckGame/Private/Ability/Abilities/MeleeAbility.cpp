@@ -83,13 +83,16 @@ void UMeleeAbility::OnEnemyHit(AActor* Enemy)
 
 	for (TSubclassOf<UGameplayEffect> GameplayEffectClass : EffectsToApply)
 	{
-		FGameplayEffectSpecHandle GameplayEffectToApply = MakeOutgoingGameplayEffectSpec(GameplayEffectClass);
+		FGameplayEffectContextHandle EffectContextHandle = GetActorInfo().AbilitySystemComponent->MakeEffectContext();
+		FHitResult MeleeHit;
+		MeleeHit.Normal = GetActorInfo().AvatarActor.IsValid() ? GetActorInfo().AvatarActor->GetActorForwardVector() : FVector::ZeroVector;
+		EffectContextHandle.AddHitResult(MeleeHit);
+		FGameplayEffectSpecHandle GameplayEffectToApply = GetActorInfo().AbilitySystemComponent->MakeOutgoingSpec(GameplayEffectClass, 1.0f, EffectContextHandle);
 		FGameplayEffectSpec* Spec = GameplayEffectToApply.Data.Get();
 		if (!Spec)
 		{
 			continue;
 		}
-
 		Spec->SetSetByCallerMagnitude(DeckGameplayTags::SetByCaller_Damage, DamageAmount);
 		EnemyASC->ApplyGameplayEffectSpecToSelf(*GameplayEffectToApply.Data.Get());
 	}

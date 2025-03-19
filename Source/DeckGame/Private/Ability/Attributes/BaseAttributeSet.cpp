@@ -38,16 +38,6 @@ bool UBaseAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData&
 		return false;
 	}
 
-#if !UE_BUILD_SHIPPING
-	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
-	{
-		if (Data.Target.HasMatchingGameplayTag(DeckGameplayTags::Cheat_Immortal))
-		{
-			Data.EvaluatedData.Magnitude = 0.0f;
-		}
-	}
-#endif // !UE_BUILD_SHIPPING
-
 	HealthBeforeAttributeChange = GetHealth();
 	MaxHealthBeforeAttributeChange = GetMaxHealth();
 
@@ -84,6 +74,15 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		if (GetHealth() <= 0.0f && GetHealth() != HealthBeforeAttributeChange)
 		{
+#if !UE_BUILD_SHIPPING
+			if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+			{
+				if (Data.Target.HasMatchingGameplayTag(DeckGameplayTags::Cheat_Immortal))
+				{
+					return;
+				}
+			}
+#endif // !UE_BUILD_SHIPPING
 			OnDeath.Broadcast(Data.EffectSpec);
 
 			FGameplayEventData Payload;

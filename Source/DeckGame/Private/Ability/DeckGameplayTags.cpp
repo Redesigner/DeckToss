@@ -26,6 +26,6 @@ namespace DeckGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(StateTree_Perception_Forgotten, "StateTree.Perception.Forgotten");
 
 #if !UE_BUILD_SHIPPING
-	UE_DEFINE_GAMEPLAY_TAG(Cheat_Immortal, "Cheat.Immortal");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cheat_Immortal, "Cheat.Immortal", "Character is immortal -- they cannot die, but will still take damage.");
 #endif // !UE_BUILD_SHIPPING
 }
