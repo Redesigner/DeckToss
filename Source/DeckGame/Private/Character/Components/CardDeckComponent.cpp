@@ -101,6 +101,21 @@ FGameplayAbilitySpecHandle UCardDeckComponent::GetAbilityBySlotIndex(uint8 Index
 	return Cards[Index].GrantedAbility;
 }
 
+void UCardDeckComponent::ChangeSelectedSlot(int IndexDelta)
+{
+	// The currently selected slot index can be one past the end, in case a player wants to move an ability to a new slot
+	int Index = FMath::Modulo(CurrentlySelectedSlotIndex + IndexDelta, Cards.Num() + 1);
+	CurrentlySelectedSlotIndex = Index < 0 ? Cards.Num() + Index : Index;
+	OnSelectedSlotChanged.Broadcast(CurrentlySelectedSlotIndex);
+}
+
+void UCardDeckComponent::ChangeSelectedCard(int IndexDelta)
+{
+	int Index = FMath::Modulo(CurrentlySelectedCardIndex + IndexDelta, Cards.Num());
+	CurrentlySelectedCardIndex = Index < 0 ? Cards.Num() + Index : Index;
+	OnSelectedCardChanged.Broadcast(CurrentlySelectedCardIndex);
+}
+
 void UCardDeckComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	TOptional<uint8> CardSlot = GetSlotIndex(InputTag);

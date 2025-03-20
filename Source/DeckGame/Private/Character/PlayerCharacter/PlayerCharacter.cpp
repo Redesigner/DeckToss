@@ -110,6 +110,8 @@ void APlayerCharacter::BindActions(UInputComponent* PlayerInputComponent)
 		ETriggerEvent::Triggered, this, &ThisClass::Move, /*bLogIfNotFound=*/ false);
 	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Look,
 		ETriggerEvent::Triggered, this, &ThisClass::Look, /*bLogIfNotFound=*/ false);
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Scroll,
+		ETriggerEvent::Triggered, this, &ThisClass::Scroll, false);
 }
 
 void APlayerCharacter::PossessedBy(AController* NewController)
@@ -184,6 +186,15 @@ void APlayerCharacter::Look(const FInputActionInstance& Instance)
 		{
 			RotateOTSCamera(Input);
 		}
+	}
+}
+
+void APlayerCharacter::Scroll(const FInputActionInstance& Instance)
+{
+	float Input = Instance.GetValue().GetMagnitude();
+	if (UCardDeckComponent* CardDeckComponent = GetCardDeckComponent())
+	{
+		CardDeckComponent->ChangeSelectedCard(Input > 0 ? 1 : -1);
 	}
 }
 

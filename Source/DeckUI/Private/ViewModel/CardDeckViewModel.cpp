@@ -2,12 +2,10 @@
 
 #include "ViewModel/CardDeckViewModel.h"
 
-#include "Kismet/GameplayStatics.h"
 #include "Logging/StructuredLog.h"
 
 #include "DeckUI.h"
 #include "Character/DeckPlayerState.h"
-#include "Game/DeckGameMode.h"
 
 void UCardDeckViewModel::BindPlayerState(ADeckPlayerState* PlayerState)
 {
@@ -19,6 +17,8 @@ void UCardDeckViewModel::BindPlayerState(ADeckPlayerState* PlayerState)
 	}
 
 	CardDeck->OnCardsChanged.AddUObject(this, &ThisClass::CardsChanged);
+	CardDeck->OnSelectedCardChanged.AddUObject(this, &ThisClass::SelectedCardChanged);
+	CardDeck->OnSelectedSlotChanged.AddUObject(this, &ThisClass::SlotChanged);
 	CardsChanged(CardDeck->GetCards());
 }
 
@@ -47,4 +47,14 @@ void UCardDeckViewModel::CardsChanged(const TArray<FCardDeckEntry>& Cards)
 		CardData.Add(NewEntry);
 	}
 	BroadcastFieldValueChanged(ThisClass::FFieldNotificationClassDescriptor::CardData);
+}
+
+void UCardDeckViewModel::SlotChanged(uint8 SlotIndex)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(SelectedSlot, SlotIndex);
+}
+
+void UCardDeckViewModel::SelectedCardChanged(uint8 CardIndex)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(SelectedCard, CardIndex);
 }

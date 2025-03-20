@@ -41,8 +41,18 @@ public:
 	void BindPlayerState(ADeckPlayerState* PlayerState);
 
 private:
-	UPROPERTY(BlueprintReadOnly, FieldNotify, meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Meta = (AllowPrivateAccess))
 	TArray<TObjectPtr<UCardDeckUIData>> CardData;
+	
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Meta = (AllowPrivateAccess))
+	uint8 SelectedSlot = 0;
+	
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Meta = (AllowPrivateAccess))
+	uint8 SelectedCard = 0;
 
 	void CardsChanged(const TArray<FCardDeckEntry>& Cards);
+
+	void SlotChanged(uint8 SlotIndex);
+
+	void SelectedCardChanged(uint8 CardIndex);
 };

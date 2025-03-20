@@ -86,6 +86,7 @@ private:
 	// Native Actions
 	void Move(const FInputActionInstance& Instance);
 	void Look(const FInputActionInstance& Instance);
+	void Scroll(const FInputActionInstance& Instance);
 
 	UFUNCTION(BlueprintCallable)
 	UDeckAbilitySystemComponent* GetDeckAbilitySystemComponent() const;

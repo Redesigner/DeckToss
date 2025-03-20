@@ -46,12 +46,21 @@ public:
 	DECLARE_DELEGATE_OneParam(FOnCardAbilityPressed, FGameplayAbilitySpecHandle);
 	FOnCardAbilityPressed OnCardAbilityPressed;
 
+	void ChangeSelectedSlot(int IndexDelta);
+	void ChangeSelectedCard(int IndexDelta);
+	
+	TMulticastDelegate<void(uint8)> OnSelectedSlotChanged;
+	TMulticastDelegate<void(uint8)> OnSelectedCardChanged;
+
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 	
 private:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))
 	TArray<FCardDeckEntry> Cards;
+
+	uint8 CurrentlySelectedSlotIndex = 0;
+	uint8 CurrentlySelectedCardIndex = 0;
 
 	static TOptional<uint8> GetSlotIndex(FGameplayTag InputTag);
 };

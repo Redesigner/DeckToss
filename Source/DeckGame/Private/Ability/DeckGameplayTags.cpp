@@ -7,6 +7,7 @@ namespace DeckGameplayTags
 {
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Move, "InputTag.Move", "Move input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look, "InputTag.Look", "Look input.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Scroll, "InputTag.Scroll", "Scroll input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Attack, "InputTag.Attack", "Default attack input.");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Slot_0, "InputTag.Slot.0", "Input Tag for first card slot.");
