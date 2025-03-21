@@ -81,12 +81,19 @@ private:
 	void PossessedBy(AController* NewController) override;
 
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
-
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 
 	// Native Actions
 	void Move(const FInputActionInstance& Instance);
 	void Look(const FInputActionInstance& Instance);
+	void Scroll(const FInputActionInstance& Instance);
+	void Select(const FInputActionInstance& Instance);
+
+	void SelectSlot0(const FInputActionInstance& Instance);
+	void SelectSlot1(const FInputActionInstance& Instance);
+	void SelectSlot2(const FInputActionInstance& Instance);
+
+	void SendSelectionEvent(uint8 Index);
 
 	UFUNCTION(BlueprintCallable)
 	UDeckAbilitySystemComponent* GetDeckAbilitySystemComponent() const;

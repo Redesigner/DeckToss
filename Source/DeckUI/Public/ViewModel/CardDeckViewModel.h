@@ -11,6 +11,14 @@
 
 class ADeckPlayerState;
 
+UENUM(BlueprintType)
+enum ESlotState : uint8
+{
+	Inactive,
+	Active,
+	Selected
+};
+
 USTRUCT(BlueprintType)
 struct DECKUI_API FCardDeckUIEntry
 {
@@ -18,6 +26,12 @@ struct DECKUI_API FCardDeckUIEntry
 
 	UPROPERTY(BlueprintReadOnly)
 	FText CardName;
+
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<ESlotState> State;
+
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UMaterialInterface> Icon;
 };
 
 /// Object wrapper for use in UMG
@@ -41,8 +55,22 @@ public:
 	void BindPlayerState(ADeckPlayerState* PlayerState);
 
 private:
-	UPROPERTY(BlueprintReadOnly, FieldNotify, meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Meta = (AllowPrivateAccess))
 	TArray<TObjectPtr<UCardDeckUIData>> CardData;
+	
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Meta = (AllowPrivateAccess))
+	uint8 SelectedSlot = 0;
+	
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Meta = (AllowPrivateAccess))
+	uint8 SelectedCard = 0;
 
 	void CardsChanged(const TArray<FCardDeckEntry>& Cards);
+
+	void SlotChanged(uint8 SlotIndex);
+
+	void SelectedCardChanged(uint8 CardIndex);
+
+	void SelectionModeChanged(bool bSelectionMode);
+
+	TArray<FCardDeckEntry> LocalCardsTemp;
 };

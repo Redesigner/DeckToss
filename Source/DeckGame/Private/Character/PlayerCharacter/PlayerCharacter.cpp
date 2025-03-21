@@ -95,7 +95,14 @@ void APlayerCharacter::BindActions(UInputComponent* PlayerInputComponent)
 	{
 		if (UStateTreeComboComponent* Combo = DeckPlayerState->GetComboComponent())
 		{
-			DeckInputComponent->BindAbilityActions(InputConfig, Combo, &UStateTreeComboComponent::Input_AbilityInputTagPressed, &UStateTreeComboComponent::Input_AbilityInputTagReleased, BindHandles);
+			DeckInputComponent->BindAbilityActions(InputConfig, Combo, &UStateTreeComboComponent::Input_AbilityInputTagPressed,
+				&UStateTreeComboComponent::Input_AbilityInputTagReleased, BindHandles);
+		}
+
+		if (UCardDeckComponent* CardDeckComponent = DeckPlayerState->GetCardDeckComponent())
+		{
+			DeckInputComponent->BindAbilityActions(InputConfig, CardDeckComponent, &UCardDeckComponent::Input_AbilityInputTagPressed,
+				&UCardDeckComponent::Input_AbilityInputTagReleased, BindHandles);
 		}
 	}
 	
@@ -103,6 +110,21 @@ void APlayerCharacter::BindActions(UInputComponent* PlayerInputComponent)
 		ETriggerEvent::Triggered, this, &ThisClass::Move, /*bLogIfNotFound=*/ false);
 	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Look,
 		ETriggerEvent::Triggered, this, &ThisClass::Look, /*bLogIfNotFound=*/ false);
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Scroll,
+		ETriggerEvent::Triggered, this, &ThisClass::Scroll, false);
+
+	
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Slot_Select,
+		ETriggerEvent::Started, this, &ThisClass::Select, true);
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Slot_Select,
+		ETriggerEvent::Completed, this, &ThisClass::Select, true);
+	
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Slot_0_Select,
+		ETriggerEvent::Started, this, &ThisClass::SelectSlot0, true);
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Slot_1_Select,
+		ETriggerEvent::Started, this, &ThisClass::SelectSlot1, true);
+	DeckInputComponent->BindNativeAction(InputConfig, DeckGameplayTags::InputTag_Slot_2_Select,
+		ETriggerEvent::Started, this, &ThisClass::SelectSlot2, true);
 }
 
 void APlayerCharacter::PossessedBy(AController* NewController)
@@ -178,6 +200,59 @@ void APlayerCharacter::Look(const FInputActionInstance& Instance)
 			RotateOTSCamera(Input);
 		}
 	}
+}
+
+void APlayerCharacter::Scroll(const FInputActionInstance& Instance)
+{
+	float Input = Instance.GetValue().GetMagnitude();
+	if (UCardDeckComponent* CardDeckComponent = GetCardDeckComponent())
+	{
+		CardDeckComponent->ChangeSelectedCard(Input > 0 ? 1 : -1);
+	}
+}
+
+void APlayerCharacter::Select(const FInputActionInstance& Instance)
+{
+	if (UCardDeckComponent* CardDeckComponent = GetCardDeckComponent())
+	{
+		switch (Instance.GetTriggerEvent())
+		{
+		case ETriggerEvent::Started:
+			CardDeckComponent->SetSelectionMode(true);
+			break;
+		case ETriggerEvent::Completed:
+			CardDeckComponent->SetSelectionMode(false);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void APlayerCharacter::SelectSlot0(const FInputActionInstance& Instance)
+{
+	SendSelectionEvent(0);
+}
+
+void APlayerCharacter::SelectSlot1(const FInputActionInstance& Instance)
+{
+	SendSelectionEvent(1);
+}
+
+void APlayerCharacter::SelectSlot2(const FInputActionInstance& Instance)
+{
+	SendSelectionEvent(2);
+}
+
+void APlayerCharacter::SendSelectionEvent(uint8 Index)
+{
+	FGameplayEventData Payload;
+	Payload.EventTag = DeckGameplayTags::GameplayEvent_AbilityTrigger_SelectSlot;
+	Payload.Instigator = GetPlayerState();
+	Payload.Target = GetPlayerState();
+	Payload.EventMagnitude = Index;
+
+	GetAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
 }
 
 void APlayerCharacter::RotateTopDownCamera(FVector2D Input)

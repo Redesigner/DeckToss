@@ -19,6 +19,11 @@
 UCardDeckComponent::UCardDeckComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		Cards.Add({FGameplayTag(), FGameplayAbilitySpecHandle()});
+	}
 }
 
 void UCardDeckComponent::GiveCard(ACardItem* CardItem)
@@ -59,14 +64,139 @@ void UCardDeckComponent::GiveCard(ACardItem* CardItem)
 	}
 
 	FGameplayAbilitySpec NewSpec = FGameplayAbilitySpec(CardEntry.CardAbility->GetDefaultObject<UDeckGameplayAbility>(), 1);
-	NewSpec.GetDynamicSpecSourceTags().AddTag(DeckGameplayTags::InputTag_Attack);
+	// NewSpec.GetDynamicSpecSourceTags().AddTag(DeckGameplayTags::InputTag_Attack);
 	FGameplayAbilitySpecHandle NewAbilityHandle = ASC->GiveAbility(NewSpec);
-	Cards.Add(FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle));
+
+	bool bEmptySlot = false;
+	for (int i = 0; i < 3; ++i)
+	{
+		if (!Cards[i].CardTag.IsValid())
+		{
+			Cards[i] = FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle);
+			bEmptySlot = true;
+			break;
+		}
+	}
+
+	if (!bEmptySlot)
+	{
+		Cards.Add(FCardDeckEntry(CardEntry.CardTag, NewAbilityHandle));
+	}
 
 	OnCardsChanged.Broadcast(Cards);
 }
 
-const TArray<FCardDeckEntry> UCardDeckComponent::GetCards() const
+const TArray<FCardDeckEntry>& UCardDeckComponent::GetCards() const
 {
 	return Cards;
+}
+
+TOptional<FCardDeckEntry> UCardDeckComponent::GetCard(uint8 Index) const
+{
+	if (Index >= Cards.Num() || Cards[Index].CardTag.IsValid())
+	{
+		return TOptional<FCardDeckEntry>();
+	}
+
+	return Cards[Index];
+}
+
+TOptional<FCardDeckEntry> UCardDeckComponent::ConsumeCard(uint8 Index)
+{
+	if (Index >= Cards.Num() || !Cards[Index].CardTag.IsValid())
+	{
+		return TOptional<FCardDeckEntry>();
+	}
+	FCardDeckEntry RemovedCard = Cards[Index];
+	Cards[Index].CardTag = FGameplayTag();
+	Cards[Index].GrantedAbility = FGameplayAbilitySpecHandle();
+	if (IAbilitySystemInterface* AbilitySystem = Cast<IAbilitySystemInterface>(GetOwner()))
+	{
+		if (UAbilitySystemComponent* ASC = AbilitySystem->GetAbilitySystemComponent())
+		{
+			ASC->ClearAbility(RemovedCard.GrantedAbility);
+		}
+	}
+
+	OnCardsChanged.Broadcast(Cards);
+	return RemovedCard;
+}
+
+FGameplayAbilitySpecHandle UCardDeckComponent::GetAbilityBySlotIndex(uint8 Index) const
+{
+	if (Index >= Cards.Num())
+	{
+		return FGameplayAbilitySpecHandle();
+	}
+
+	return Cards[Index].GrantedAbility;
+}
+
+void UCardDeckComponent::ChangeSelectedSlot(int IndexDelta)
+{
+	// The currently selected slot index can be one past the end, in case a player wants to move an ability to a new slot
+	int Index = FMath::Modulo(CurrentlySelectedSlotIndex + IndexDelta, Cards.Num() + 1);
+	CurrentlySelectedSlotIndex = Index < 0 ? Cards.Num() + Index : Index;
+	OnSelectedSlotChanged.Broadcast(CurrentlySelectedSlotIndex);
+}
+
+void UCardDeckComponent::ChangeSelectedCard(int IndexDelta)
+{
+	int Index = FMath::Modulo(CurrentlySelectedCardIndex + IndexDelta, Cards.Num());
+	CurrentlySelectedCardIndex = Index < 0 ? Cards.Num() + Index : Index;
+	OnSelectedCardChanged.Broadcast(CurrentlySelectedCardIndex);
+}
+
+void UCardDeckComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	TOptional<uint8> CardSlot = GetSlotIndex(InputTag);
+	if (CardSlot && CardSlot.GetValue() < Cards.Num())
+	{
+		if (Cards[CardSlot.GetValue()].bActive || !Cards[CardSlot.GetValue()].GrantedAbility.IsValid())
+		{
+			return;
+		}
+		Cards[CardSlot.GetValue()].bActive = true;
+		OnCardAbilityPressed.ExecuteIfBound(Cards[CardSlot.GetValue()].GrantedAbility);
+	}
+}
+
+void UCardDeckComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	TOptional<uint8> CardSlot = GetSlotIndex(InputTag);
+	if (CardSlot && CardSlot.GetValue() < Cards.Num())
+	{
+		Cards[CardSlot.GetValue()].bActive = false;
+	}
+}
+
+void UCardDeckComponent::SetSelectionMode(bool bSelectionModeIn)
+{
+	if (bSelectionModeIn == bSelectionMode)
+	{
+		return;
+	}
+
+	bSelectionMode = bSelectionModeIn;
+	OnSelectionModeChanged.Broadcast(bSelectionMode);
+}
+
+TOptional<uint8> UCardDeckComponent::GetSlotIndex(FGameplayTag InputTag)
+{
+	if (InputTag == DeckGameplayTags::InputTag_Slot_0)
+	{
+		return 0;
+	}
+
+	if (InputTag == DeckGameplayTags::InputTag_Slot_1)
+	{
+		return 1;
+	}
+
+	if (InputTag == DeckGameplayTags::InputTag_Slot_2)
+	{
+		return 2;
+	}
+
+	return TOptional<uint8>();
 }
