@@ -7,6 +7,12 @@
 
 #include "DeckGameplayAbility.generated.h"
 
+/// Cancel the ability and return, replicating the cancellation
+#define ABILITY_CANCEL_AND_RETURN() CancelAbility(Handle, ActorInfo, ActivationInfo, true); return;
+/// Call the method, cancelling if the object is a nullptr
+#define ABILITY_GET_OBJECT_OR_CANCEL(ClassType, ReturnValue, Method) ClassType ReturnValue = Method; if (!ReturnValue) { ABILITY_CANCEL_AND_RETURN() }
+/// Get the component from the specified actor, cancelling if it is nullptr
+#define ABILITY_GET_COMPONENT_OR_CANCEL(ComponentType, ReturnValue, Actor) ComponentType* ReturnValue = Actor->GetComponentByClass<ComponentType>(); if (!ReturnValue) { ABILITY_CANCEL_AND_RETURN() }
 
 class UBlackboardComponent;
 

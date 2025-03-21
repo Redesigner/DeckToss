@@ -25,6 +25,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ACardItem> CardItem;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSoftObjectPtr<UMaterialInterface> CardIcon;
 };
 
 UCLASS()

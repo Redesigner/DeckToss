@@ -91,6 +91,37 @@ const TArray<FCardDeckEntry>& UCardDeckComponent::GetCards() const
 	return Cards;
 }
 
+TOptional<FCardDeckEntry> UCardDeckComponent::GetCard(uint8 Index) const
+{
+	if (Index >= Cards.Num() || Cards[Index].CardTag.IsValid())
+	{
+		return TOptional<FCardDeckEntry>();
+	}
+
+	return Cards[Index];
+}
+
+TOptional<FCardDeckEntry> UCardDeckComponent::ConsumeCard(uint8 Index)
+{
+	if (Index >= Cards.Num() || !Cards[Index].CardTag.IsValid())
+	{
+		return TOptional<FCardDeckEntry>();
+	}
+	FCardDeckEntry RemovedCard = Cards[Index];
+	Cards[Index].CardTag = FGameplayTag();
+	Cards[Index].GrantedAbility = FGameplayAbilitySpecHandle();
+	if (IAbilitySystemInterface* AbilitySystem = Cast<IAbilitySystemInterface>(GetOwner()))
+	{
+		if (UAbilitySystemComponent* ASC = AbilitySystem->GetAbilitySystemComponent())
+		{
+			ASC->ClearAbility(RemovedCard.GrantedAbility);
+		}
+	}
+
+	OnCardsChanged.Broadcast(Cards);
+	return RemovedCard;
+}
+
 FGameplayAbilitySpecHandle UCardDeckComponent::GetAbilityBySlotIndex(uint8 Index) const
 {
 	if (Index >= Cards.Num())
@@ -137,6 +168,17 @@ void UCardDeckComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 	{
 		Cards[CardSlot.GetValue()].bActive = false;
 	}
+}
+
+void UCardDeckComponent::SetSelectionMode(bool bSelectionModeIn)
+{
+	if (bSelectionModeIn == bSelectionMode)
+	{
+		return;
+	}
+
+	bSelectionMode = bSelectionModeIn;
+	OnSelectionModeChanged.Broadcast(bSelectionMode);
 }
 
 TOptional<uint8> UCardDeckComponent::GetSlotIndex(FGameplayTag InputTag)

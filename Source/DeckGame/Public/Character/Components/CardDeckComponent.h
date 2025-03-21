@@ -38,6 +38,8 @@ public:
 	void GiveCard(ACardItem* CardItem);
 
 	const TArray<FCardDeckEntry>& GetCards() const;
+	TOptional<FCardDeckEntry> GetCard(uint8 Index) const;
+	TOptional<FCardDeckEntry> ConsumeCard(uint8 Index);
 
 	FOnCardsChanged OnCardsChanged;
 
@@ -52,8 +54,12 @@ public:
 	TMulticastDelegate<void(uint8)> OnSelectedSlotChanged;
 	TMulticastDelegate<void(uint8)> OnSelectedCardChanged;
 
+	TMulticastDelegate<void(bool)> OnSelectionModeChanged;
+
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+
+	void SetSelectionMode(bool bSelectionModeIn);
 	
 private:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))
@@ -61,6 +67,8 @@ private:
 
 	uint8 CurrentlySelectedSlotIndex = 0;
 	uint8 CurrentlySelectedCardIndex = 0;
+
+	bool bSelectionMode = false;
 
 	static TOptional<uint8> GetSlotIndex(FGameplayTag InputTag);
 };

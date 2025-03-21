@@ -23,6 +23,7 @@ void UDeckAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 		return;
 	}
 
+	UE_LOGFMT(LogDeckGame, Display, "DeckAbilitySystemComponent: InputTag '{Tag}' pressed.", InputTag.ToString());
 	InputHeldTags.Add(InputTag);
 	
 	TArray<FGameplayAbilitySpecHandle> TagHandles;
