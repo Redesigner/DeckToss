@@ -12,7 +12,7 @@
 
 class UShapeComponent;
 
-UCLASS()
+UCLASS(meta = (DisplayName = "Spawn Hitbox"))
 class DECKGAME_API UAnimNotifyState_Hitbox : public UAnimNotifyState
 {
 	GENERATED_BODY()

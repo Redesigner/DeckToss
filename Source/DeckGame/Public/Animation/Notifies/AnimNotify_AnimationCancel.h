@@ -15,8 +15,10 @@ class DECKGAME_API UAnimNotify_AnimationCancel : public UAnimNotify
 	GENERATED_BODY()
 
 	UAnimNotify_AnimationCancel();
-	
-	bool ShouldFireInEditor() override;
 
 	void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
+
+#if WITH_EDITORONLY_DATA
+	bool ShouldFireInEditor() override;
+#endif
 };
