@@ -22,6 +22,7 @@ namespace DeckGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEffect_Stun, "GameplayEffect.Stun", "Character cannot move, but can still be moved and fall due to gravity");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEffect_Frozen, "GameplayEffect.Frozen", "Character cannot move, and is not affected by external forces.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEffect_Invuln, "GameplayEffect.Invuln", "Character does not take damage.");
 	
 	UE_DEFINE_GAMEPLAY_TAG(GameplayEvent_Death, "GameplayEvent.Death");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayEvent_Respawn, "GameplayEvent.Respawn");
