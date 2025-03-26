@@ -11,11 +11,6 @@ UAnimNotify_AnimationCancel::UAnimNotify_AnimationCancel()
 {
 }
 
-bool UAnimNotify_AnimationCancel::ShouldFireInEditor()
-{
-	return false;
-}
-
 void UAnimNotify_AnimationCancel::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	const FAnimNotifyEventReference& EventReference)
 {
@@ -30,3 +25,10 @@ void UAnimNotify_AnimationCancel::Notify(USkeletalMeshComponent* MeshComp, UAnim
 		ASC->bCanAnimationBeCancelled = true;
 	}
 }
+
+#if WITH_EDITORONLY_DATA
+bool UAnimNotify_AnimationCancel::ShouldFireInEditor()
+{
+	return false;
+}
+#endif

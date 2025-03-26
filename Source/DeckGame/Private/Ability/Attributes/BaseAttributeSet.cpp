@@ -38,6 +38,14 @@ bool UBaseAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData&
 		return false;
 	}
 
+	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		if (Data.Target.HasMatchingGameplayTag(DeckGameplayTags::GameplayEffect_Invuln))
+		{
+			Data.EvaluatedData.Magnitude = 0.0f;
+		}
+	}
+
 	HealthBeforeAttributeChange = GetHealth();
 	MaxHealthBeforeAttributeChange = GetMaxHealth();
 
