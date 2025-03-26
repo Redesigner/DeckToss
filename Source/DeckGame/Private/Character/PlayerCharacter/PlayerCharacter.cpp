@@ -60,6 +60,18 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 		//TeleportToLastSafeLocation();
 		TeleportToStart();
 	}
+
+	if (GetMesh())
+	{
+		if (GetActorForwardVector().X > 0.0f)
+		{
+			GetMesh()->SetWorldRotation(FRotator::MakeFromEuler(FVector(0.0f, 0.0f, 0.0f)));
+		}
+		else
+		{
+			GetMesh()->SetWorldRotation(FRotator::MakeFromEuler(FVector(0.0f, 0.0f, 180.0f)));
+		}
+	}
 }
 
 void APlayerCharacter::InteractVolumeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
