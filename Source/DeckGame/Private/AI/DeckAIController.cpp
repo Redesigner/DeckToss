@@ -23,6 +23,8 @@ void ADeckAIController::BeginPlay()
 	StateTreeComponent->StartLogic();
 	AIPerception->OnTargetPerceptionInfoUpdated.AddUniqueDynamic(this, &ThisClass::TargetPerceptionInfoUpdated);
 	AIPerception->OnTargetPerceptionForgotten.AddUniqueDynamic(this, &ThisClass::TargetPerceptionForgotten);
+
+	TargetLocationProxy = GetWorld()->SpawnActor(TargetProxyClass);
 }
 
 void ADeckAIController::TargetPerceptionInfoUpdated(const FActorPerceptionUpdateInfo& UpdateInfo)

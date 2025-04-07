@@ -20,8 +20,7 @@ class DECKGAME_API ADeckAIController : public AAIController
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Components, Meta = (AllowPrivateAccess))
 	TObjectPtr<UStateTreeAIComponent> StateTreeComponent;
-
-private:
+	
 	ADeckAIController();
 
 	void BeginPlay() override; 
@@ -31,4 +30,11 @@ private:
 
 	UFUNCTION()
 	void TargetPerceptionForgotten(AActor* Actor);
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Meta = (AllowPrivateAccess))
+	TSubclassOf<AActor> TargetProxyClass;
+
+public:
+	UPROPERTY(VisibleAnywhere)
+	TWeakObjectPtr<AActor> TargetLocationProxy;
 };
