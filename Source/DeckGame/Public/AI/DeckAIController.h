@@ -34,7 +34,9 @@ class DECKGAME_API ADeckAIController : public AAIController
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Meta = (AllowPrivateAccess))
 	TSubclassOf<AActor> TargetProxyClass;
 
-public:
-	UPROPERTY(VisibleAnywhere)
 	TWeakObjectPtr<AActor> TargetLocationProxy;
+	
+public:
+	AActor* GetTargetLocationProxy() const;
+
 };

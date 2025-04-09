@@ -57,3 +57,8 @@ void ADeckAIController::TargetPerceptionForgotten(AActor* Actor)
 	AIPerception->GetKnownPerceivedActors(nullptr, PerceivedActors);
 	StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception_Forgotten);
 }
+
+AActor* ADeckAIController::GetTargetLocationProxy() const
+{
+	return TargetLocationProxy.Get();
+}

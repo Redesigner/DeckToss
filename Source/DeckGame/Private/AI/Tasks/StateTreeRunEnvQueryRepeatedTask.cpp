@@ -54,9 +54,9 @@ EStateTreeRunStatus FStateTreeRunEnvQueryRepeatedTask::Tick(FStateTreeExecutionC
 		}*/
 		if (ADeckAIController* DeckAIController = Cast<ADeckAIController>(Context.GetOwner()))
 		{
-			if (DeckAIController->TargetLocationProxy.IsValid())
+			if (DeckAIController->GetTargetLocationProxy())
 			{
-				DeckAIController->TargetLocationProxy->SetActorLocation(*VectorPtr);
+				DeckAIController->GetTargetLocationProxy()->SetActorLocation(*VectorPtr);
 			}
 		}
 	}
