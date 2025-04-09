@@ -6,20 +6,16 @@
 #include "StateTreeTaskBase.h"
 #include "StateTreePropertyRef.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
-#include "StateTreeRunEnvQueryRepeatedTask.generated.h"
+#include "StateTreeSetActorToQueryLocationTask.generated.h"
 
 struct FEnvQueryResult;
 struct FAIDynamicParam;
 class UEnvQuery;
 
 USTRUCT()
-struct FStateTreeRunEnvQueryRepeatedInstanceData
+struct FStateTreeSetActorToQueryLocationInstanceData
 {
 	GENERATED_BODY()
-
-	// Result of the query. If an array is binded, it will output all the created values otherwise it will output the best one.
-	UPROPERTY(EditAnywhere, Category = Out, meta = (RefType = "/Script/CoreUObject.Vector, /Script/Engine.Actor", CanRefToArray))
-	FStateTreePropertyRef Result;
 
 	// The query will be run with this actor has the owner object.
 	UPROPERTY(EditAnywhere, Category = Context)
@@ -29,13 +25,12 @@ struct FStateTreeRunEnvQueryRepeatedInstanceData
 	UPROPERTY(EditAnywhere, Category = Parameter)
 	TObjectPtr<UEnvQuery> QueryTemplate;
 
+	UPROPERTY(EditAnywhere, Category = Parameter)
+	TObjectPtr<AActor> Actor = nullptr;
+
 	// Query config associated with the query template.
 	UPROPERTY(EditAnywhere, EditFixedSize, Category = Parameter)
 	TArray<FAIDynamicParam> QueryConfig;
-
-	/** determines which item will be stored (All = only first matching) */
-	UPROPERTY(EditAnywhere, Category = Parameter)
-	TEnumAsByte<EEnvQueryRunMode::Type> RunMode = EEnvQueryRunMode::SingleResult;
 
 	/** To use dynamic pathfinding, set the location of an empty actor instead*/
 	UPROPERTY(EditAnywhere, Category = Parameter)
@@ -48,21 +43,14 @@ struct FStateTreeRunEnvQueryRepeatedInstanceData
 
 	int32 RequestId = INDEX_NONE;
 	
-	UPROPERTY(EditAnywhere, Category = Parameter, Meta = (ClampMin = 0.0f))
-	float Interval = 0.0f;
-
-	float CurrentTimeInterval = 0.0f;
-	
 };
 
-// This cannot inherit from FStateTreeRunEnvQueryTask because the editor methods are not exported
-// Is this a bug?
-USTRUCT(meta = (DisplayName = "Run Env Query Repeated", Category = "Query"))
-struct DECKGAME_API FStateTreeRunEnvQueryRepeatedTask : public FStateTreeTaskCommonBase
+USTRUCT(meta = (DisplayName = "Set Actor To Query Location", Category = "Query"))
+struct DECKGAME_API FStateTreeSetActorToQueryLocationTask : public FStateTreeTaskCommonBase
 {
 	GENERATED_BODY()
 
-	using FInstanceDataType = FStateTreeRunEnvQueryRepeatedInstanceData;
+	using FInstanceDataType = FStateTreeSetActorToQueryLocationInstanceData;
 
 	const UStruct* GetInstanceDataType() const override { return FInstanceDataType::StaticStruct(); }
 
@@ -71,8 +59,6 @@ struct DECKGAME_API FStateTreeRunEnvQueryRepeatedTask : public FStateTreeTaskCom
 	void ExitState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
 
 	void StartQuery(FStateTreeExecutionContext& Context, FInstanceDataType& InstanceData) const;
-	void CancelQuery(FStateTreeExecutionContext& Context, FInstanceDataType& InstanceData) const;
-	void ResetQuery(FStateTreeExecutionContext& Context, FInstanceDataType& InstanceData) const;
 
 #if WITH_EDITOR
 	void PostEditInstanceDataChangeChainProperty(const FPropertyChangedChainEvent& PropertyChangedEvent, FStateTreeDataView InstanceDataView) override;
