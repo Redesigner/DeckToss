@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 
 #include "GameplayTagContainer.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayCueInterface.h"
+#include "Character/DeckCharacter.h"
+#include "Character/DeckTeamAgentInterface.h"
 
 #include "Character/Components/CardDeckInterface.h"
 
@@ -26,8 +27,8 @@ struct FInputActionInstance;
 
 // @TODO: Separate playercharacter logic to be reused for enemies into ADeckCharacter class
 UCLASS()
-class DECKGAME_API APlayerCharacter : public ACharacter,
-	public IAbilitySystemInterface, public IGameplayCueInterface, public ICardDeckInterface
+class DECKGAME_API APlayerCharacter : public ADeckCharacter,
+	public IAbilitySystemInterface, public IGameplayCueInterface, public ICardDeckInterface, public IDeckTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -69,8 +70,6 @@ private:
 	DECLARE_MULTICAST_DELEGATE(FOnPotentialInteractionsChanged);
 	FOnPotentialInteractionsChanged OnPotentialInteractionsChanged;
 
-	FVector LastSafeLocation;
-
 	APlayerCharacter(const FObjectInitializer& ObjectInitializer);
 
 	void BindActions(UInputComponent* PlayerInputComponent);
@@ -110,4 +109,7 @@ private:
 	void RotateOTSCamera(FVector2D Input);
 
 	UCardDeckComponent* GetCardDeckComponent() const override;
+
+	void SetDeckTeam(EDeckTeam InTeam) override;
+	EDeckTeam GetDeckTeam() const override;
 };

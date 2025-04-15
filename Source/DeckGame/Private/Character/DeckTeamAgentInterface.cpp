@@ -1,7 +1,8 @@
-// Copyright (c) 2024 Stephen Melnick
+// Copyright (c) 2025 Paul Alicia, Stephen Melnick, Ian Morales
 
 
-#include "Game/DeckTeamAgentInterface.h"
+#include "Character/DeckTeamAgentInterface.h"
+
 
 void IDeckTeamAgentInterface::SetGenericTeamId(const FGenericTeamId& TeamID)
 {
@@ -11,18 +12,6 @@ void IDeckTeamAgentInterface::SetGenericTeamId(const FGenericTeamId& TeamID)
 FGenericTeamId IDeckTeamAgentInterface::GetGenericTeamId() const
 {
 	return GetTeamIdAsEnum(GetDeckTeam());
-}
-
-void IDeckTeamAgentInterface::ConditionalBroadcastTeamChanged(TScriptInterface<IDeckTeamAgentInterface> This, EDeckTeam OldTeamID, EDeckTeam NewTeamID)
-{
-	if (OldTeamID != NewTeamID)
-	{
-		UObject* ThisObj = This.GetObject();
-		if (FOnTeamChangedDelegate* OnTeamChangedDelegate = This.GetInterface()->GetOnTeamChangedDelegate())
-		{
-			OnTeamChangedDelegate->Broadcast(ThisObj, OldTeamID, NewTeamID);
-		}
-	}
 }
 
 EDeckTeam IDeckTeamAgentInterface::GetTeamIdAsEnum(FGenericTeamId GenericTeamID)

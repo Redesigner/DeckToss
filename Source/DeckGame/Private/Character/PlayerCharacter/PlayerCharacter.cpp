@@ -23,7 +23,7 @@
 
 
 APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) :
-	ACharacter(ObjectInitializer.SetDefaultSubobjectClass(ACharacter::CharacterMovementComponentName, UDeckMovementComponent::StaticClass()))
+	ADeckCharacter(ObjectInitializer.SetDefaultSubobjectClass(ACharacter::CharacterMovementComponentName, UDeckMovementComponent::StaticClass()))
 {
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -54,24 +54,6 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) 
 void APlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	if (GetActorLocation().Z <= -1000.0f)
-	{
-		//TeleportToLastSafeLocation();
-		TeleportToStart();
-	}
-
-	if (GetMesh())
-	{
-		if (GetActorForwardVector().X > 0.0f)
-		{
-			GetMesh()->SetWorldRotation(FRotator::MakeFromEuler(FVector(0.0f, 0.0f, 0.0f)));
-		}
-		else
-		{
-			GetMesh()->SetWorldRotation(FRotator::MakeFromEuler(FVector(0.0f, 0.0f, 180.0f)));
-		}
-	}
 }
 
 void APlayerCharacter::InteractVolumeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -305,15 +287,19 @@ UCardDeckComponent* APlayerCharacter::GetCardDeckComponent() const
 	return CardDeck;
 }
 
+void APlayerCharacter::SetDeckTeam(EDeckTeam InTeam)
+{
+	GetPlayerStateChecked<ADeckPlayerState>()->SetDeckTeam(InTeam);
+}
+
+EDeckTeam APlayerCharacter::GetDeckTeam() const
+{
+	return GetPlayerStateChecked<ADeckPlayerState>()->GetDeckTeam();
+}
+
 USphereComponent* APlayerCharacter::GetInteractionVolume() const
 {
 	return InteractionVolume;
-}
-
-void APlayerCharacter::TeleportToLastSafeLocation()
-{
-	GetMovementComponent()->Velocity = FVector();
-	TeleportTo(LastSafeLocation, GetActorRotation());
 }
 
 bool APlayerCharacter::CanJump() const

@@ -27,6 +27,16 @@ void ADeckAIController::BeginPlay()
 	TargetLocationProxy = GetWorld()->SpawnActor(TargetProxyClass);
 }
 
+void ADeckAIController::Destroyed()
+{
+	Super::Destroyed();
+
+	if (TargetLocationProxy.IsValid())
+	{
+		TargetLocationProxy->Destroy();
+	}
+}
+
 void ADeckAIController::TargetPerceptionInfoUpdated(const FActorPerceptionUpdateInfo& UpdateInfo)
 {
 	if (UpdateInfo.Stimulus.IsActive())
@@ -56,6 +66,32 @@ void ADeckAIController::TargetPerceptionForgotten(AActor* Actor)
 	UE_LOGFMT(LogDeckGame, Display, "DeckAIController '{ControllerName}': Perception Forgotten", GetName());
 	AIPerception->GetKnownPerceivedActors(nullptr, PerceivedActors);
 	StateTreeComponent->SendStateTreeEvent(DeckGameplayTags::StateTree_Perception_Forgotten);
+}
+
+ETeamAttitude::Type ADeckAIController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	if (const APawn* OtherPawn = Cast<APawn>(&Other)) {
+
+		if (const IDeckTeamAgentInterface* TeamAgent = Cast<IDeckTeamAgentInterface>(OtherPawn))
+		{
+			FGenericTeamId OtherTeamID = TeamAgent->GetDeckTeam();
+
+			if (OtherTeamID.GetId() == EDeckTeam::Unaffiliated)
+			{
+				return ETeamAttitude::Neutral;
+			}
+			if (OtherTeamID.GetId() != GetDeckTeam())
+			{
+				return ETeamAttitude::Hostile;
+			}
+			else
+			{
+				return ETeamAttitude::Friendly;
+			}
+		}
+	}
+
+	return ETeamAttitude::Neutral;
 }
 
 AActor* ADeckAIController::GetTargetLocationProxy() const
