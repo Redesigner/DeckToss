@@ -2,7 +2,6 @@
 
 #include "Character/Components/DeckMovementComponent.h"
 
-#include "AbilitySystemInterface.h"
 #include "AbilitySystemGlobals.h"
 #include "GameplayEffect.h"
 #include "Logging/StructuredLog.h"
@@ -36,7 +35,7 @@ void UDeckMovementComponent::SetWandering(bool Wandering)
 
 void UDeckMovementComponent::PhysWalking(float DeltaTime, int32 Iterations)
 {
-	if (Velocity.IsNearlyZero())
+	if (bStopSprintWhenStill && Velocity.IsNearlyZero())
 	{
 		bIsSprinting = false;
 	}

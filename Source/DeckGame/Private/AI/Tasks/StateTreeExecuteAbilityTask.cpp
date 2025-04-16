@@ -20,12 +20,16 @@ EStateTreeRunStatus FStateTreeExecuteAbilityTask::EnterState(FStateTreeExecution
 	IAbilitySystemInterface* AbilitySystem = Cast<IAbilitySystemInterface>(InstanceData.Actor);
 	if (!AbilitySystem)
 	{
+		UE_LOGFMT(LogDeckGame, Warning, "'{AIName}' Failed to execute attack: Pawn '{PawnName}' does not implement AbilitySystemInterface.",
+			GetNameSafe(Context.GetOwner()), GetNameSafe(InstanceData.Actor));
 		return EStateTreeRunStatus::Failed;
 	}
 
 	UAbilitySystemComponent* ASC = AbilitySystem->GetAbilitySystemComponent();
 	if (!ASC)
 	{
+		UE_LOGFMT(LogDeckGame, Warning, "'{AIName}' Failed to execute attack: Pawn '{PawnName}' does not have a valid ASC.",
+			GetNameSafe(Context.GetOwner()), GetNameSafe(InstanceData.Actor));
 		return EStateTreeRunStatus::Failed;
 	}
 
@@ -33,6 +37,8 @@ EStateTreeRunStatus FStateTreeExecuteAbilityTask::EnterState(FStateTreeExecution
 	ASC->FindAllAbilitiesWithTags(AbilityHandles, AbilityTag.GetSingleTagContainer());
 	if (AbilityHandles.IsEmpty())
 	{
+		UE_LOGFMT(LogDeckGame, Warning, "'{AIName}' Failed to execute attack: Pawn '{PawnName}' does not have an ability matching tag '{TagName}'.",
+			GetNameSafe(Context.GetOwner()), GetNameSafe(InstanceData.Actor), AbilityTag.ToString());
 		return EStateTreeRunStatus::Failed;
 	}
 
@@ -54,6 +60,7 @@ EStateTreeRunStatus FStateTreeExecuteAbilityTask::EnterState(FStateTreeExecution
 	InstanceData.ActivatedAbility = AbilityHandles[0];
 	if (ASC->TryActivateAbility(AbilityHandles[0]))
 	{
+		UE_LOGFMT(LogDeckGame, Display, "STT_ExecuteAbility: Ability '{AbilityName}' activated successfully.", GetNameSafe(ASC->FindAbilitySpecFromHandle(AbilityHandles[0])->Ability));
 		InstanceData.bRunning = true;
 		return EStateTreeRunStatus::Running;
 	}
