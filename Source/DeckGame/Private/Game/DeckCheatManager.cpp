@@ -3,18 +3,13 @@
 
 #include "Game/DeckCheatManager.h"
 
-#include "DeckGame.h"
 #include "Ability/DeckGameplayTags.h"
 #include "Character/DeckPlayerController.h"
 #include "Character/DeckPlayerState.h"
-#include "Game/DeckGameMode.h"
-#include "Game/DeckGameState.h"
 
 #include "Ability/DeckAbilitySystemComponent.h"
 #include "Ability/Attributes/BaseAttributeSet.h"
 
-#include "Kismet/GameplayStatics.h"
-#include "Logging/StructuredLog.h"
 
 void UDeckCheatManager::SetImmortal(bool bImmortal)
 {
@@ -36,14 +31,30 @@ void UDeckCheatManager::SetImmortal(bool bImmortal)
 		return;
 	}
 
-	if (bImmortal)
+	ApplyTag(ASC, DeckGameplayTags::Cheat_Immortal, bImmortal);
+}
+
+void UDeckCheatManager::SetInvulnerable(bool bInvuln)
+{
+	ADeckPlayerController* DeckPlayerController = Cast<ADeckPlayerController>(GetOuterAPlayerController());
+	if (!DeckPlayerController)
 	{
-		ASC->AddLooseGameplayTag(DeckGameplayTags::Cheat_Immortal);
+		return;
 	}
-	else
+
+	ADeckPlayerState* DeckPlayerState = DeckPlayerController->GetPlayerState<ADeckPlayerState>();
+	if (!DeckPlayerState)
 	{
-		ASC->RemoveLooseGameplayTag(DeckGameplayTags::Cheat_Immortal);
+		return;
 	}
+
+	UDeckAbilitySystemComponent* ASC = DeckPlayerState->GetDeckAbilitySystemComponent();
+	if (!ASC)
+	{
+		return;
+	}
+
+	ApplyTag(ASC, DeckGameplayTags::GameplayEffect_Invuln, bInvuln);
 }
 
 void UDeckCheatManager::KillPlayer()
@@ -61,4 +72,16 @@ void UDeckCheatManager::KillPlayer()
 	}
 
 	DeckPlayerState->GetAttributeSet()->KillOwner();
+}
+
+void UDeckCheatManager::ApplyTag(UAbilitySystemComponent* ASC, FGameplayTag Tag, bool bApply)
+{
+	if (bApply)
+	{
+		ASC->AddLooseGameplayTag(Tag);
+	}
+	else
+	{
+		ASC->RemoveLooseGameplayTag(Tag);
+	}
 }

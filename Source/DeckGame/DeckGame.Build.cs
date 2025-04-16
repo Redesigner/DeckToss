@@ -14,7 +14,9 @@ public class DeckGame : ModuleRules
 			"Engine",
 			"GameplayAbilities",
 			"InputCore",
-			"EnhancedInput"
+			"EnhancedInput",
+			"AIModule",
+			"StateTreeModule"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {
@@ -24,6 +26,7 @@ public class DeckGame : ModuleRules
             "GameplayStateTreeModule",
             "GameplayTags",
 			"GameplayTasks",
+			"NavigationSystem",
 			"StateTreeModule",
 			"UMG"
 		});

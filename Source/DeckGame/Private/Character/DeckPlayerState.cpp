@@ -36,6 +36,16 @@ UAbilitySystemComponent* ADeckPlayerState::GetAbilitySystemComponent() const
     return AbilitySystem;
 }
 
+void ADeckPlayerState::SetDeckTeam(EDeckTeam InTeam)
+{
+    TeamId = InTeam;
+}
+
+EDeckTeam ADeckPlayerState::GetDeckTeam() const
+{
+    return TeamId;
+}
+
 UCardDeckComponent* ADeckPlayerState::GetCardDeckComponent() const
 {
     return CardDeck;

@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "GameplayEffect.h"
 #include "AbilitySystemInterface.h"
+#include "Character/DeckCharacter.h"
+#include "Character/DeckTeamAgentInterface.h"
 
 #include "DeckEnemy.generated.h"
 
@@ -15,7 +16,7 @@ class UDeckAbilitySet;
 class UDeckAbilitySystemComponent;
 
 UCLASS()
-class DECKGAME_API ADeckEnemy : public ACharacter, public IAbilitySystemInterface
+class DECKGAME_API ADeckEnemy : public ADeckCharacter, public IAbilitySystemInterface, public IDeckTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -37,6 +38,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void MoveForward();
+	
+	void SetDeckTeam(EDeckTeam InTeam) override;
+	EDeckTeam GetDeckTeam() const override;
 	
 private:
 	ADeckEnemy(const FObjectInitializer& ObjectInitializer);

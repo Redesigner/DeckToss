@@ -12,7 +12,7 @@
 
 
 ADeckEnemy::ADeckEnemy(const FObjectInitializer& ObjectInitializer) :
-	ACharacter(ObjectInitializer.SetDefaultSubobjectClass(ACharacter::CharacterMovementComponentName, UDeckMovementComponent::StaticClass()))
+	ADeckCharacter(ObjectInitializer.SetDefaultSubobjectClass(ACharacter::CharacterMovementComponentName, UDeckMovementComponent::StaticClass()))
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UDeckAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("Base Attribute Set"));
@@ -22,6 +22,23 @@ ADeckEnemy::ADeckEnemy(const FObjectInitializer& ObjectInitializer) :
 void ADeckEnemy::MoveForward()
 {
 	AddMovementInput(GetActorForwardVector());
+}
+
+void ADeckEnemy::SetDeckTeam(EDeckTeam InTeam)
+{
+	if (IDeckTeamAgentInterface* AgentInterface = Cast<IDeckTeamAgentInterface>(GetController()))
+	{
+		AgentInterface->SetDeckTeam(InTeam);
+	}
+}
+
+EDeckTeam ADeckEnemy::GetDeckTeam() const
+{
+	if (IDeckTeamAgentInterface* AgentInterface = Cast<IDeckTeamAgentInterface>(GetController()))
+	{
+		return AgentInterface->GetDeckTeam();
+	}
+	return EDeckTeam::Unaffiliated;
 }
 
 void ADeckEnemy::BeginPlay()

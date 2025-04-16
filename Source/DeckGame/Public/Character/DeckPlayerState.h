@@ -4,6 +4,7 @@
 
 #include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
+#include "DeckTeamAgentInterface.h"
 #include "GameplayEffect.h"
 #include "GameFramework/PlayerState.h"
 
@@ -28,7 +29,7 @@ enum EDeckPlayerStatus : uint8
 
 UCLASS()
 class DECKGAME_API ADeckPlayerState : public APlayerState,
-	public IAbilitySystemInterface, public ICardDeckInterface
+	public IAbilitySystemInterface, public ICardDeckInterface, public IDeckTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -41,15 +42,14 @@ class DECKGAME_API ADeckPlayerState : public APlayerState,
 	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category = Attributes, Meta = (AllowPrivateAccess))
 	TObjectPtr<UBaseAttributeSet> AttributeSet;
 
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Behavior, meta = (AllowPrivateAccess = true))
-	//TEnumAsByte<EDeckTeam> TeamId;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, Meta = (AllowPrivateAccess))
 	TObjectPtr<UCardDeckComponent> CardDeck;
 
 	UPROPERTY(Instanced, VisibleAnywhere, BlueprintReadOnly, Category = Components, Meta = (AllowPrivateAccess))
 	TObjectPtr<UStateTreeComboComponent> ComboComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Team, Meta = (AllowPrivateAccess))
+	TEnumAsByte<EDeckTeam> TeamId = EDeckTeam::Friendly;
 
 	//--------------------Lives and Knockdown------------------
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Lives, Meta = (AllowPrivateAccess))
@@ -130,6 +130,9 @@ public:
 	UCardDeckComponent* GetCardDeckComponent() const override;
 
 	UStateTreeComboComponent* GetComboComponent() const;
+	
+	void SetDeckTeam(EDeckTeam InTeam) override;
+	EDeckTeam GetDeckTeam() const override;
 
 private:
 	bool bReceivingNotifications = false;

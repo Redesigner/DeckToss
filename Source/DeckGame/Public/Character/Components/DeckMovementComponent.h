@@ -24,6 +24,10 @@ class DECKGAME_API UDeckMovementComponent : public UCharacterMovementComponent
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Sprinting, meta = (AllowPrivateAccess, ClampMin = 1.0f))
 	float SprintSpeedModifier = 1.25f;
 
+	/// Stop sprinting when the character is not actively moving
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Sprinting, meta = (AllowPrivateAccess))
+	bool bStopSprintWhenStill = true;
+	
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Sprinting, meta = (AllowPrivateAccess))
 	bool bIsSprinting = false;
