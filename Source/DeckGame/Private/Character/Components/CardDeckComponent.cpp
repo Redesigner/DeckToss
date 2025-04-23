@@ -167,6 +167,7 @@ void UCardDeckComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 	if (CardSlot && CardSlot.GetValue() < Cards.Num())
 	{
 		Cards[CardSlot.GetValue()].bActive = false;
+		OnCardAbilityReleased.ExecuteIfBound(Cards[CardSlot.GetValue()].GrantedAbility);
 	}
 }
 
@@ -199,4 +200,12 @@ TOptional<uint8> UCardDeckComponent::GetSlotIndex(FGameplayTag InputTag)
 	}
 
 	return TOptional<uint8>();
+}
+
+void UCardDeckComponent::DeactivateCards()
+{
+	for (FCardDeckEntry& Card : Cards)
+	{
+		Card.bActive = false;
+	}
 }
