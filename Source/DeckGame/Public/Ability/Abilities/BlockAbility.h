@@ -18,6 +18,9 @@ class DECKGAME_API UBlockAbility : public UDeckGameplayAbility
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Blocking, Meta = (AllowPrivateAccess))
 	TArray<FMeleeHitboxSpawnParameters> Hitboxes;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Blocking, Meta = (AllowPrivateAccess))
+	TSubclassOf<UGameplayEffect> BlockDurationEffect;
+	
 	// Animation that plays when the character starts blocking
 	// It should loop if the block is a continuous state
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Blocking|Animation", Meta = (AllowPrivateAccess))
@@ -32,4 +35,6 @@ class DECKGAME_API UBlockAbility : public UDeckGameplayAbility
 	void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 	void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
+
+	FActiveGameplayEffectHandle BlockEffectHandle;
 };

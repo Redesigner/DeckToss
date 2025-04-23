@@ -3,6 +3,7 @@
 
 #include "Ability/Abilities/BlockAbility.h"
 
+#include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Character/Components/MeleeComponent.h"
 
@@ -29,6 +30,11 @@ void UBlockAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	{
 		MeleeComponent->SpawnHitbox(Hitbox);
 	}
+
+	if (BlockDurationEffect)
+	{
+		BlockEffectHandle = ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, MakeOutgoingGameplayEffectSpec(BlockDurationEffect));
+	}
 }
 
 void UBlockAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -42,6 +48,12 @@ void UBlockAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FG
 		{
 			MeleeComponent->DestroyAllHitboxes();
 		}
+	}
+
+	if (BlockEffectHandle.IsValid())
+	{
+		ActorInfo->AbilitySystemComponent->RemoveActiveGameplayEffect(BlockEffectHandle);
+		BlockEffectHandle.Invalidate();
 	}
 }
 
