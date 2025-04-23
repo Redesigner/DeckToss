@@ -26,7 +26,7 @@ EStateTreeRunStatus FStateTreeSprintTask::EnterState(FStateTreeExecutionContext&
 	if (UDeckMovementComponent* MovementComponent = Cast<UDeckMovementComponent>(InstanceData.Pawn->GetCharacterMovement()))
 	{
 		MovementComponent->bIsSprinting = bSprintEnable;
-		return EStateTreeRunStatus::Succeeded;
+		return bEndTaskOnComplete ? EStateTreeRunStatus::Succeeded : EStateTreeRunStatus::Running;
 	}
 
 	return EStateTreeRunStatus::Failed;

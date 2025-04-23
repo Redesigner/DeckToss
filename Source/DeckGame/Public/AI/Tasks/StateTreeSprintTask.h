@@ -23,6 +23,9 @@ struct DECKGAME_API FStateTreeSprintTask : public FStateTreeTaskCommonBase
 	UPROPERTY(EditAnywhere, Category = "Input")
 	bool bSprintEnable = true;
 
+	UPROPERTY(EditAnywhere, Category = Parameter)
+	bool bEndTaskOnComplete = true;
+
 	using FInstanceDataType = FStateTreeSprintTaskInstanceData;
 
 	const UStruct* GetInstanceDataType() const override { return FInstanceDataType::StaticStruct(); }
