@@ -28,6 +28,13 @@ ADeckPlayerState::ADeckPlayerState()
     {
         AbilitySystem->TryActivateAbility(SpecHandle);
     });
+    CardDeck->OnCardAbilityReleased.BindLambda([this](FGameplayAbilitySpecHandle SpecHandle)
+    {
+        if (FGameplayAbilitySpec* Spec = AbilitySystem->FindAbilitySpecFromHandle(SpecHandle))
+        {
+            AbilitySystem->AbilitySpecInputReleased(*Spec);
+        }
+    });
 }
 
 
@@ -180,6 +187,8 @@ void ADeckPlayerState::Die()
         GetWorldTimerManager().SetTimer(RespawnTimer, FTimerDelegate::CreateUObject(this, &ADeckPlayerState::Respawn), RespawnTime, false);
     }
     AbilitySystem->RemoveAllActiveEffects();
+    AbilitySystem->CancelAllAbilities();
+    CardDeck->DeactivateCards();
     OnDeath.Broadcast();
     
     if (GetPawn())

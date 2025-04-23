@@ -45,9 +45,10 @@ public:
 
 	FGameplayAbilitySpecHandle GetAbilityBySlotIndex(uint8 Index) const;
 
-	DECLARE_DELEGATE_OneParam(FOnCardAbilityPressed, FGameplayAbilitySpecHandle);
-	FOnCardAbilityPressed OnCardAbilityPressed;
-
+	DECLARE_DELEGATE_OneParam(FOnCardAbility, FGameplayAbilitySpecHandle);
+	FOnCardAbility OnCardAbilityPressed;
+	FOnCardAbility OnCardAbilityReleased;
+	
 	void ChangeSelectedSlot(int IndexDelta);
 	void ChangeSelectedCard(int IndexDelta);
 	
@@ -60,6 +61,8 @@ public:
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 
 	void SetSelectionMode(bool bSelectionModeIn);
+
+	void DeactivateCards();
 	
 private:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Meta = (AllowPrivateAccess, Categories = "CardTag"))
