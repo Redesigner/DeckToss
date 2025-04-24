@@ -34,7 +34,7 @@ EStateTreeRunStatus FStateTreeSprintTask::EnterState(FStateTreeExecutionContext&
 
 #if WITH_EDITOR
 FText FStateTreeSprintTask::GetDescription(const FGuid& ID, FStateTreeDataView InstanceDataView,
-                                           const IStateTreeBindingLookup& BindingLookup, EStateTreeNodeFormatting Formatting) const
+	const IStateTreeBindingLookup& BindingLookup, EStateTreeNodeFormatting Formatting) const
 {
 	const FText Format = (Formatting == EStateTreeNodeFormatting::RichText)
 		? LOCTEXT("SprintTaskRich", "<b>{Bool}</> Sprint")
