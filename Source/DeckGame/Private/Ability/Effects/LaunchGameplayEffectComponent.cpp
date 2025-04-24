@@ -8,7 +8,7 @@
 #include "GameFramework/Character.h"
 
 void ULaunchGameplayEffectComponent::OnGameplayEffectExecuted(FActiveGameplayEffectsContainer& ActiveGEContainer,
-                                                                    FGameplayEffectSpec& GESpec, FPredictionKey& PredictionKey) const
+	FGameplayEffectSpec& GESpec, FPredictionKey& PredictionKey) const
 {
 	Super::OnGameplayEffectExecuted(ActiveGEContainer, GESpec, PredictionKey);
 
