@@ -16,9 +16,9 @@ FText FStateTreeHasGameplayTagConsideration::GetDescription(const FGuid& ID, FSt
 	const FInstanceDataType* InstanceData = InstanceDataView.GetPtr<FInstanceDataType>();
 	check(InstanceData);
 
-	return FText::FromString("Test");
-	// return FText::Format(LOCTEXT("HasGameplayTag", "{AbilitySystemComponent} has GameplayTag {GameplayTag}"), 
-	// 	FText::FromString(GetNameSafe(InstanceData->AbilitySystemComponent)), FText::FromString(InstanceData->GameplayTag.ToString()));
+	FText TargetName = BindingLookup.GetBindingSourceDisplayName(FStateTreePropertyPath(ID, GET_MEMBER_NAME_CHECKED(FInstanceDataType, AbilitySystem)), Formatting);
+	return FText::Format(LOCTEXT("HasGameplayTag", "{0} has GameplayTag {1}"), 
+		TargetName, FText::FromString(InstanceData->GameplayTag.ToString()));
 }
 #endif
 
